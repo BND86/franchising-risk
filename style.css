@@ -1,0 +1,117 @@
+body {
+    font-family: Arial, sans-serif;
+    background: white;
+    background-size: cover;
+    color: #333;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh; /* Делаем страницу в 2 раза выше экрана */
+    overflow-y: auto; /* Включаем вертикальную прокрутку */
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Сдвигаем содержимое вверх */
+    background-color: #2e2b37;
+    color: white;
+    padding: 20px 40px; /* Уменьшаем верхний отступ */
+    height: 630px; /* Фиксированная высота */
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.container {
+    flex: 1; /* Заполняет пространство между header и footer */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Центрируем по горизонтали */
+    justify-content: flex-start; /* Начинаем сверху */
+    padding: 40px 0; /* Добавляем отступы сверху и снизу */
+}
+
+nav { /*рсположение кнопок навигации на странице */
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.nav-button {
+    font-family: "Courier New", Courier, monospace; /* Моноширинный шрифт */
+    background-color: #D3D3D3;
+    border: none;
+    color: #2e2b37;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.grey-box-info {
+    position: absolute; /* Абсолютное позиционирование внутри header */
+    top: 35%; /* Сдвигаем вниз на 50% от высоты header */
+    left: 23%; /* Центрируем по горизонтали */
+    transform: translate(-50%, -50%); /* Коррекция смещения */
+    
+    
+    font-family: "Courier New", Courier, monospace; /* Моноширинный шрифт */
+    width: 40%; /* Ширина окна */
+    height: 450px; /* Высота окна */
+    background-color: #D3D3D3; /* Белый фон */
+    border-radius: 10px; /* Скруглённые углы */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Тень */
+    padding: 20px; /* Отступы внутри */
+    z-index: 10; /* Поверх остальных элементов */
+    color: #2e2b37; /* Цвет текста */
+    
+}
+
+.title-box {
+    font-family: "Courier New", Courier, monospace; /* Моноширинный шрифт */
+    background-color: #D3D3D3; /* Светло-серый фон */
+    padding: 15px 20px; /* Внутренние отступы */
+    border-radius: 10px; /* Скруглённые углы */
+    display: inline-block; /* Чтобы подстраивалось под размер текста */
+    font-size: 24px;
+    font-weight: bold;
+    color: #2e2b37; /* Цвет текста */
+}
+
+
+.grey-box-manual {
+    font-family: "Courier New", Courier, monospace; /* Моноширинный шрифт */
+    width: 40%; /* Ширина окна */
+    max-width: 600px; /* Максимальная ширина */
+    height: auto; /* Высота по контенту */
+    min-height: 450px; /* Минимальная высота */
+    background-color: #D3D3D3; /* Белый фон */
+    border-radius: 10px; /* Скруглённые углы */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Тень */
+    padding: 20px; /* Отступы внутри */
+    z-index: 10; /* Поверх остальных элементов */
+    color: #2e2b37; /* Цвет текста */
+    font-size: clamp(14px, 2vw, 18px); /* Масштабируемый текст */
+    font-weight: bold;
+}
+
+.footer {
+    font-family: "Courier New", Courier, monospace; /* Моноширинный шрифт */
+    width: 100%;
+    background-color: #2e2b37;
+    height: 50px;
+    padding: 10px 0;
+}
+
+.footer-box {
+    font-family: "Courier New", Courier, monospace; /* Моноширинный шрифт */
+    background-color: #D3D3D3; /* Светло-серый фон */
+    padding: 15px 20px; /* Внутренние отступы */
+    border-radius: 10px; /* Скруглённые углы */
+    display: inline-block; /* Чтобы подстраивалось под размер текста */
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    color: #2e2b37; /* Цвет текста */
+}
