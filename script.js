@@ -1,7 +1,10 @@
-function openModal(id) {
-    document.getElementById(id).style.display = "flex";
-}
+document.addEventListener("DOMContentLoaded", function () {
+    let currentPage = window.location.pathname.split("/").pop();
+    let navButtons = document.querySelectorAll(".nav-button");
 
-function closeModal(id) {
-    document.getElementById(id).style.display = "none";
-}
+    navButtons.forEach(button => {
+        if (button.getAttribute("href") === currentPage) {
+            button.classList.add("active");
+        }
+    });
+});
