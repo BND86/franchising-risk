@@ -26,13 +26,14 @@ def get_questions():
     return result
 
 
-def save_response(question_id, option_id, risk_type, risk_value):
+def save_response(session_id, question_id, option_id, risk_type, risk_value):
     conn = sqlite3.connect(RESPONSES_DB)
     cursor = conn.cursor()
 
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS responses (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            session_id TEXT,
             id_question INTEGER,
             id_option INTEGER,
             risk_type TEXT,
@@ -40,10 +41,10 @@ def save_response(question_id, option_id, risk_type, risk_value):
         )
     ''')
     
-    cursor.execute("INSERT INTO responses (id_question, id_option, risk_type, risk_value) VALUES (?, ?, ?, ?)",
-                   (question_id, option_id, risk_type, risk_value))
+    cursor.execute("INSERT INTO responses (session_id, id_question, id_option, risk_type, risk_value) VALUES (?, ?, ?, ?, ?)",
+                   (session_id, question_id, option_id, risk_type, risk_value))
     conn.commit()
     conn.close()
 
     with open("responses.txt", "a") as f:
-        f.write(f"{question_id},{option_id},{risk_type},{risk_value}\n")
+        f.write(f"{session_id}, {question_id}, {option_id}, {risk_type}, {risk_value}\n")
