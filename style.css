@@ -1,48 +1,48 @@
 body {
     font-family: Arial, sans-serif;
     background: white;
-    /*background: linear-gradient(to bottom, #2e2b37 630px, #ffffff 100px);*/
     background-size: cover;
     color: #333;
     text-align: center;
     margin: 0;
     padding: 0;
-    min-height: 100vh; /* Делаем страницу в 2 раза выше экрана */
-    overflow-y: auto; /* Включаем вертикальную прокрутку */
+    min-height: 100vh;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
 }
 
 header {
-    position: fixed; /* Фиксируем header */
-    top: 0; /* Прижимаем к верхней границе */
+    position: fixed;
+    top: 0;
     left: 0;
-    width: 100%; /* Растягиваем на всю ширину */
-    background-color: #2e2b37; /* Цвет фона */
+    width: 100%;
+    background-color: #2e2b37;
     color: white;
     display: flex;
     justify-content: space-between;
-    align-items: center; /* Центрируем содержимое */
-    padding: 15px 40px; /* Оптимизированные отступы */
-    height: 60px; /* Фиксированная высота */
+    align-items: center;
+    padding: 15px 40px;
+    height: 60px;
     font-size: 24px;
     font-weight: bold;
     z-index: 1000;
 }
 
 main {
-    flex: 1; /* Растягивает основной контент, чтобы футер прижимался вниз */
+    flex: 1;
+    padding: 80px 20px;
 }
 
-nav { /*рсположение кнопок навигации на странице */
+nav {
     display: flex;
     gap: 10px;
     margin-top: 10px;
-    padding-right: 50px; /* Отступ справа, чтобы кнопки не заходили за скролл */
+    padding-right: 50px;
 }
 
 .nav-button {
-    font-family: "Courier New", Courier, monospace; /* Моноширинный шрифт */
+    font-family: "Courier New", Courier, monospace;
     background-color: #D3D3D3;
     border: none;
     color: #2e2b37;
@@ -54,40 +54,92 @@ nav { /*рсположение кнопок навигации на страни
 }
 
 .nav-button.active {
-    background-color: #555555; /* Сделаем активную кнопку немного темнее */
-    color: #000; /* Сделаем текст темнее для контраста */
-    border: 2px solid #2e2b37; /* Добавим обводку */
+    background-color: #555555;
+    color: #000;
+    border: 2px solid #2e2b37;
 }
 
 .title-box {
-    font-family: "Courier New", Courier, monospace; /* Моноширинный шрифт */
-    background-color: #D3D3D3; /* Светло-серый фон */
-    padding: 15px 20px; /* Внутренние отступы */
-    border-radius: 10px; /* Скруглённые углы */
-    display: inline-block; /* Чтобы подстраивалось под размер текста */
+    font-family: "Courier New", Courier, monospace;
+    background-color: #D3D3D3;
+    padding: 15px 20px;
+    border-radius: 10px;
+    display: inline-block;
     font-size: 24px;
     font-weight: bold;
-    color: #2e2b37; /* Цвет текста */
+    color: #2e2b37;
 }
 
 .footer {
-    font-family: "Courier New", Courier, monospace; /* Моноширинный шрифт */
+    font-family: "Courier New", Courier, monospace;
     width: 100%;
     background-color: #2e2b37;
     height: 50px;
     padding: 10px 0;
     text-align: center;
-    position: relative; /* Убедимся, что он остается в потоке документа */
+    position: relative;
+    margin-top: auto;
 }
 
 .footer-box {
-    font-family: "Courier New", Courier, monospace; /* Моноширинный шрифт */
-    background-color: #D3D3D3; /* Светло-серый фон */
-    padding: 15px 20px; /* Внутренние отступы */
-    border-radius: 10px; /* Скруглённые углы */
-    display: inline-block; /* Чтобы подстраивалось под размер текста */
+    font-family: "Courier New", Courier, monospace;
+    background-color: #D3D3D3;
+    padding: 15px 20px;
+    border-radius: 10px;
+    display: inline-block;
     text-align: center;
     font-size: 14px;
     font-weight: bold;
-    color: #2e2b37; /* Цвет текста */
+    color: #2e2b37;
+}
+
+/* Стили для анкеты-опросника */
+.survey-container {
+    max-width: 800px;
+    margin: 200px auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.survey-question {
+    display: inline-block;
+    background: #D3D3D3;
+    padding: 20px;
+    border-radius: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 10px;
+    width: 250px;
+    text-align: center;
+}
+
+.survey-options {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.survey-options label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #D3D3D3;
+    padding: 15px;
+    border-radius: 15px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100px;
+    text-align: center;
+}
+
+.survey-options input[type="radio"] {
+    display: none;
+}
+
+.survey-options label:hover {
+    background: #bbb;
 }
