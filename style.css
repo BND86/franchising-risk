@@ -140,6 +140,23 @@ nav {
     display: none;
 }
 
+.survey-options input[type="radio"]:checked + label {
+    background: #aaa; /* Цвет при выборе */
+    color: white;
+    font-weight: bold;
+}
+
 .survey-options label:hover {
     background: #bbb;
+}
+
+.survey-section {
+    display: none; /* Скрываем секции по умолчанию */
+}
+.toggle-section {
+    cursor: pointer;
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
 }
