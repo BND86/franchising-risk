@@ -4,6 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Команда 3</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header>
+    <div class="title-box">
+        Инструмент по анализу рисков для франшизы фаст-фуд
+    </div>
+    
+    <nav>
+        <a class="nav-button" href="/">Меню</a>
+        <a class="nav-button" href="/user">Пользователь</a>
+        <a class="nav-button" href="/owner">Правообладатель</a>
+        <a class="nav-button" href="/glossary">Глоссарий</a>
+    </nav>
+</header>
+
+<form id="survey-form" action="/submit" method="post">
+    {% for question in questions %}
+        <div class="question" data-id="{{ question.id }}" data-conditional="{{ 'true' if question.is_conditional else 'false' }}">
+            <p>{{ question.text }}</p>
+            {% if question.type == "single" %}
+                {% for option in question.options %}
+                    <label>
+                        <input type="radio" name="{{ question.id }}_{{ option.id }}" 
+                               value="{{ option.risk_type }},{{ option.risk_value }}"
+                               data-next="{{ option.next_question or '' }}">
+                        {{ option.text }}
+                    </label><br>
+                {% endfor %}
+            {% elif question.type == "multiple" %}
+                {% for option in question.options %}
+                    <label>
+                        <input type="checkbox" name="{{ question.id }}_{{ option.id }}" 
+                               value="{{ option.risk_type }},{{ option.risk_value }}"
+                               data-next="{{ option.next_question or '' }}">
+                        {{ option.text }}
+                    </label><br>
+                {% endfor %}
+            {% endif %}
+        </div>
+    {% endfor %}
+    <button type="submit">Отправить</button>
+</form>
+
+<div class="footer">
+    <div class="footer-box"> 
+        Сделано в 2025 году | Подготовила проект Команда 3
+    </div>
+</div>
+
+<script src="/static/script.js" defer></script>
+
+
+<!-- <!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Команда 3</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -322,4 +382,4 @@
 <script src="script.js"></script>
 
 </body>
-</html>
+</html> -->
