@@ -1,19 +1,54 @@
-from fastapi import FastAPI, Form, Request
+import sqlite3
+from fastapi import FastAPI, Form, Request, Query
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from database import get_questions, save_response
 from uuid import uuid4
-
+from fastapi.responses import RedirectResponse
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
-# Функция для получения идентификатора сессии пользователя
+DATABASE = "responses.db"
+
+def get_risk_statistics(session_id: str):
+    query = """
+    SELECT 
+        risk_type,
+        COUNT(*) AS count_answers,
+        SUM(risk_value) AS total_risk_value
+    FROM responses
+    WHERE session_id = ?
+    GROUP BY risk_type;
+    """
+    with sqlite3.connect(DATABASE) as conn:
+        cursor = conn.cursor()
+        cursor.execute(query, (session_id,))
+        data = cursor.fetchall()
+    
+    result = {"hight": {"count": 0, "sum": 0}, 
+              "middle": {"count": 0, "sum": 0}, 
+              "low": {"count": 0, "sum": 0}}
+    
+    for risk_type, count, total in data:
+        if risk_type in result:
+            result[risk_type] = {"count": count, "sum": total}
+    
+    return result
+
 def get_session_id(request: Request):
     session_id = request.cookies.get("session_id")
     if not session_id:
         session_id = str(uuid4())  # Генерация нового уникального идентификатора
     return session_id
+
+@app.get("/stats.html")
+def index(request: Request, session_id: str = Query(None, description="Session ID to filter responses")):
+    if not session_id:
+        return templates.TemplateResponse("stats.html", {"request": request, "stats": None, "session_id": None})
+    
+    stats = get_risk_statistics(session_id)
+    return templates.TemplateResponse("stats.html", {"request": request, "stats": stats, "session_id": session_id})
 
 @app.get("/", response_class=HTMLResponse)
 async def survey_page(request: Request):
@@ -32,4 +67,5 @@ async def submit_survey(request: Request):
             risk_type, risk_value = value.split(",")
             save_response(session_id, question_id, option_id, risk_type, int(risk_value))  # Синхронная запись
     
-    return {"message": "Ответы успешно сохранены!"}
+    # После обработки данных перенаправляем пользователя на страницу /stats.html
+    return RedirectResponse(url=f"/stats.html?session_id={session_id}", status_code=303)

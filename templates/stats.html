@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Статистика рисков</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; padding: 10px; }
+        table { width: 50%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid black; padding: 8px; text-align: center; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h2>Статистика рисков</h2>
+
+    {% if stats %}
+    <table>
+        <tr>
+            <th>Тип риска</th>
+            <th>Количество</th>
+            <th>Сумма риска</th>
+        </tr>
+        {% for key, value in stats.items() %}
+        <tr>
+            <td>{{ key }}</td>
+            <td>{{ value.count }}</td>
+            <td>{{ value.sum }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% elif session_id %}
+    <p>Нет данных для session_id: <b>{{ session_id }}</b></p>
+    {% else %}
+    <p>Session ID не был передан.</p>
+    {% endif %}
+</body>
+</html>
