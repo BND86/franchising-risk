@@ -21,7 +21,58 @@
     </nav>
 </header>
 
-<form id="survey-form" action="/submit" method="post">
+<div class="survey-container">
+    <form id="survey-form" action="/submit" method="post">
+        {% for question in questions %}
+            <div class="question" data-id="{{ question.id }}" data-conditional="{{ 'true' if question.is_conditional else 'false' }}">
+                <p>{{ loop.index }}. {{ question.text }}</p>
+                <div class="survey-options">
+                    {% for option in question.options %}
+                        <!--<input type="radio" 
+                            id="q{{ question.id }}_{{ option.id }}" 
+                            name="q{{ question.id }}" 
+                            value="{{ option.risk_type }},{{ option.risk_value }}"
+                            data-next="{{ option.next_question or '' }}">
+                        <label for="q{{ question.id }}_{{ option.id }}">{{ option.text }}</label>-->
+                        <!--<input type="radio" 
+                               id="q{{ question.id }}_{{ option.id }}" 
+                               name="q{{ question.id }}" 
+                               value="{{ option.risk_type }},{{ option.risk_value }}"
+                               data-next="{{ option.next_question or '' }}">
+                        <label for="q{{ question.id }}_{{ option.id }}">{{ option.text }}</label>
+                        
+                        name="question_{{ question.id }}"-->
+                        <input type="radio" 
+                            id="q{{ question.id }}_{{ option.id }}"
+                            name="{{ question.id }}_{{ option.id }}"
+                            value="{{ option.risk_type }},{{ option.risk_value }}"
+                            data-next="{{ option.next_question or '' }}">
+                        <label for="q{{ question.id }}_{{ option.id }}">
+                            {{ option.text }}
+                        </label><br>
+
+                        <!--<input type="radio" 
+                            id="q{{ question.id }}_{{ option.id }}"
+                            name="question_{{ question.id }}" 
+                            value="{{ option.risk_type }},{{ option.risk_value }}"
+                            data-next="{{ option.next_question or '' }}"
+                            {% if loop.first %} required {% endif %}> 
+
+                        <label for="q{{ question.id }}_{{ option.id }}">
+                            {{ option.text }}
+                        </label><br>-->
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+        <div class="container">
+            <button type="submit" class="button-style">Отправить</button>
+        </div>
+    </form>
+</div>
+
+
+<!--<form id="survey-form" action="/submit" method="post">
     {% for question in questions %}
         <div class="question" data-id="{{ question.id }}" data-conditional="{{ 'true' if question.is_conditional else 'false' }}">
             <p>{{ question.text }}</p>
@@ -47,7 +98,7 @@
         </div>
     {% endfor %}
     <button type="submit">Отправить</button>
-</form>
+</form>-->
 
 <div class="footer">
     <div class="footer-box"> 

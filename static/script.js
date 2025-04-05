@@ -18,7 +18,19 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-// Функция для скрытия/показа секций
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll("input[type=radio], input[type=checkbox]").forEach(input => {
+        input.addEventListener("change", function() {
+            let nextQuestion = this.dataset.next;
+            if (nextQuestion) {
+                let questionDiv = document.querySelector(`[data-id="${nextQuestion}"]`);
+                if (questionDiv) questionDiv.style.display = "block";
+            }
+        });
+    });
+});
+
+/*// Функция для скрытия/показа секций
 function toggleSection(id) {
     var section = document.getElementById(id);
     if (section) {
@@ -27,7 +39,7 @@ function toggleSection(id) {
     } else {
         console.warn("Секция с id", id, "не найдена!");
     }
-}
+}*/
 
 /*document.addEventListener("DOMContentLoaded", function () {
     let currentPage = window.location.pathname.split("/").pop();
