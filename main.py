@@ -114,11 +114,15 @@ async def read_root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 @app.get("/user", response_class=HTMLResponse)
+async def user_page(request: Request):
+    return templates.TemplateResponse("user.html", {"request": request})
+
+@app.get("/contract", response_class=HTMLResponse)
 async def survey_page(request: Request,
                       repo: Repository = Depends(get_user_repo)):
     session_id = get_session_id(request)  # Получаем сессию пользователя
     questions = await repo.get_questions()  # Асинхронная работа с базой данных
-    return templates.TemplateResponse("user.html", {"request": request, "questions": questions, "session_id": session_id})
+    return templates.TemplateResponse("contract.html", {"request": request, "questions": questions, "session_id": session_id})
 
 @app.get("/owner", response_class=HTMLResponse)
 async def read_owner(request: Request):

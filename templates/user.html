@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Команда 3</title>
+    <title>Пользователь</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
@@ -21,84 +21,71 @@
     </nav>
 </header>
 
-<div class="survey-container">
-    <form id="survey-form" action="/submit" method="post">
-        {% for question in questions %}
-            <div class="question" data-id="{{ question.id }}" data-conditional="{{ 'true' if question.is_conditional else 'false' }}">
-                <p>{{ loop.index }}. {{ question.text }}</p>
-                <div class="survey-options">
-                    {% for option in question.options %}
-                        <!--<input type="radio" 
-                            id="q{{ question.id }}_{{ option.id }}" 
-                            name="q{{ question.id }}" 
-                            value="{{ option.risk_type }},{{ option.risk_value }}"
-                            data-next="{{ option.next_question or '' }}">
-                        <label for="q{{ question.id }}_{{ option.id }}">{{ option.text }}</label>-->
-                        <!--<input type="radio" 
-                               id="q{{ question.id }}_{{ option.id }}" 
-                               name="q{{ question.id }}" 
-                               value="{{ option.risk_type }},{{ option.risk_value }}"
-                               data-next="{{ option.next_question or '' }}">
-                        <label for="q{{ question.id }}_{{ option.id }}">{{ option.text }}</label>
-                        
-                        name="question_{{ question.id }}"-->
-                        <input type="radio" 
-                            id="q{{ question.id }}_{{ option.id }}"
-                            name="{{ question.id }}_{{ option.id }}"
-                            value="{{ option.risk_type }}_{{ option.recomendations }}"
-                            data-next="{{ option.next_question or '' }}">
-                        <label for="q{{ question.id }}_{{ option.id }}">
-                            {{ option.text }}
-                        </label><br>
-
-                        <!--<input type="radio" 
-                            id="q{{ question.id }}_{{ option.id }}"
-                            name="question_{{ question.id }}" 
-                            value="{{ option.risk_type }},{{ option.risk_value }}"
-                            data-next="{{ option.next_question or '' }}"
-                            {% if loop.first %} required {% endif %}> 
-
-                        <label for="q{{ question.id }}_{{ option.id }}">
-                            {{ option.text }}
-                        </label><br>-->
-                    {% endfor %}
-                </div>
-            </div>
-        {% endfor %}
-        <div class="container">
-            <button type="submit" class="button-style">Отправить</button>
+<main>
+    <section class="main-options">
+        <h2>Выберите тип анализа</h2>
+        <div class="option-buttons">
+            <a class="nav-button" href="/contract">Договорный анализ</a>
+            <a class="nav-button" href="/economic">Экономический анализ</a>
         </div>
-    </form>
-</div>
+    </section>
 
-
-<!--<form id="survey-form" action="/submit" method="post">
-    {% for question in questions %}
-        <div class="question" data-id="{{ question.id }}" data-conditional="{{ 'true' if question.is_conditional else 'false' }}">
-            <p>{{ question.text }}</p>
-            {% if question.type == "single" %}
-                {% for option in question.options %}
-                    <label>
-                        <input type="radio" name="{{ question.id }}_{{ option.id }}" 
-                               value="{{ option.risk_type }},{{ option.risk_value }}"
-                               data-next="{{ option.next_question or '' }}">
-                        {{ option.text }}
-                    </label><br>
-                {% endfor %}
-            {% elif question.type == "multiple" %}
-                {% for option in question.options %}
-                    <label>
-                        <input type="checkbox" name="{{ question.id }}_{{ option.id }}" 
-                               value="{{ option.risk_type }},{{ option.risk_value }}"
-                               data-next="{{ option.next_question or '' }}">
-                        {{ option.text }}
-                    </label><br>
-                {% endfor %}
-            {% endif %}
-        </div>
-    {% endfor %}
-    <button type="submit">Отправить</button>
-</form>-->
+    <section class="extra-info">
+        <h3>Внедоговорные риски в договоре коммерческой концессии (франчайзинга)</h3>
+        <p>
+            По законодательству предприниматель несёт ответственность не только за свой бизнес, но и за своих контрагентов.
+            Поэтому крайне важно провести всестороннюю проверку перед заключением договора.
+        </p>
+        <h4>Что нужно проверить:</h4>
+        <ul>
+            <li><strong>Статус контрагента</strong> (юридическое лицо или ИП).<br>
+                Проверить можно на сайте <a href="https://egrul.nalog.ru/index.html" target="_blank">ЕГРЮЛ/ЕГРИП</a>.
+                Важно запросить выписку: если организация в процессе ликвидации, это будет указано.
+                <br><em>⚠️ Если контрагент — физлицо, не зарегистрированное как ИП, договор франчайзинга заключить нельзя.</em>
+            </li>
+            <li><strong>Исполнительные производства.</strong><br>
+                Проверьте через <a href="https://fssp.gov.ru/iss/ip" target="_blank">банк данных ФССП</a>.
+                <br><em>⚠️ Наличие долгов может говорить о недобросовестности (например, уклонение от оплаты).</em>
+            </li>
+            <li><strong>Судебные споры.</strong><br>
+                Используйте <a href="https://kad.arbitr.ru/" target="_blank">арбитражную картотеку</a> для анализа судебной истории контрагента.
+            </li>
+            <li><strong>Право на товарный знак.</strong><br>
+                Проверьте регистрацию на <a href="https://searchplatform.rospatent.gov.ru/trademarks" target="_blank">сайте Роспатента</a>.
+                <br><em>⚠️ Без регистрации товарного знака у правообладателя нет права продавать франшизу.</em>
+            </li>
+            <li><strong>Стадия банкротства.</strong><br>
+                Информация доступна на <a href="https://bankrot.fedresurs.ru/?ID=82" target="_blank">Федресурсе</a>.
+                <br><em>⚠️ Договор с компанией в процессе банкротства — высокий риск.</em>
+            </li>
+            <li><strong>Причастность к экстремизму или терроризму.</strong><br>
+                Проверка возможна через <a href="https://www.fedsfm.ru/documents/terr-list" target="_blank">ФСБ список</a>.
+                <br><em>⚠️ Проверка обязательна по ФЗ-115. Игнорирование может привести к уголовной ответственности.</em>
+            </li>
+        </ul>
+        <p><strong>Важно:</strong> Ни один анализ не даст 100% гарантии успеха. Франчайзинг — это предпринимательский риск.</p>
+    </section>
+    
+    <section class="extra-info">
+        <h3>Внедоговорные экономические риски</h3>
+        <p>
+            Помимо правовых аспектов, важно учитывать и экономическую устойчивость бизнеса.
+            Некоторые риски не прописаны напрямую в договоре, но критически важны.
+        </p>
+        <ul>
+            <li><strong>Нехватка первоначального капитала.</strong><br>
+                Важно составить реалистичный бюджет, учесть бизнес-план франчайзера и предусмотреть резервный фонд.
+            </li>
+            <li><strong>Недостаточная поддержка со стороны франчайзера.</strong><br>
+                Изучите: предоставляет ли он обучение, маркетинг, операционную поддержку и т. д.
+            </li>
+            <li><strong>Изменения на рынке и в экономике.</strong><br>
+                Проанализируйте макроэкономическую ситуацию, будьте готовы адаптировать бизнес-план.
+            </li>
+        </ul>
+    </section>
+    
+</main>
 
 <div class="footer">
     <div class="footer-box"> 
@@ -108,329 +95,5 @@
 
 <script src="/static/script.js" defer></script>
 
-
-<!-- <!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Команда 3</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<header>
-    <div class="title-box">
-        Инструмент по анализу рисков для франшизы фаст-фуд
-    </div>
-    
-    <nav>
-        <a class="nav-button" href="index.html">Меню</a>
-        <a class="nav-button" href="user.html">Пользователь</a>
-        <a class="nav-button" href="owner.html">Правообладатель</a>
-        <a class="nav-button" href="glossary.html">Глоссарий</a>
-    </nav>
-</header>
-
-<div class="survey-container">
-    <form id="survey-form">
-
-        <h2 class="toggle-section" onclick="toggleSection('1')">Проверка деловой репутации</h2>
-        <div id="1" class="survey-section">
-            <div class="survey-question">
-                <p>1. Известно ли вам про ресторан?</p>
-                <div class="survey-options">
-                    <input type="radio" id="q1_yes" name="q1" value="Да">
-                    <label for="q1_yes">Да</label>
-                    
-                    <input type="radio" id="q1_no" name="q1" value="Нет">
-                    <label for="q1_no">Нет</label>
-                </div>
-            </div>
-
-            <div class="survey-question">
-                <p>2. Посещали ли вы ресторан?</p>
-                <div class="survey-options">
-                    <input type="radio" id="q2_yes" name="q2" value="Да">
-                    <label for="q2_yes">Да</label>
-                    
-                    <input type="radio" id="q2_no" name="q2" value="Нет">
-                    <label for="q2_no">Нет</label>
-                </div>
-            </div>
-
-            <div class="survey-question">
-                <p>3. Были ли скандалы в СМИ, связанные с рестораном Правообладателя?</p>
-                <div class="survey-options">
-                    <input type="radio" id="q3_yes" name="q3" value="Да">
-                    <label for="q3_yes">Да</label>
-                    
-                    <input type="radio" id="q3_no" name="q3" value="Нет">
-                    <label for="q3_no">Нет</label>
-                    
-                    <input type="radio" id="q3_info" name="q3" value="Нет информации">
-                    <label for="q3_info">Нет информации</label>
-                </div>
-            </div>
-        </div>
-
-        <h2 class="toggle-section" onclick="toggleSection('2')">Проверка исключительного права с регистрацией и связанные с ними риски</h2>
-        <div id="2" class="survey-section">
-            <div class="survey-question">
-                <p>4. Включено ли условие об отсутствии прав и притязаний на КИП у третьих лиц?</p>
-                <div class="survey-options">
-                    <input type="radio" id="q4_yes" name="q4" value="Да">
-                    <label for="q4_yes">Да</label>
-                    
-                    <input type="radio" id="q4_no" name="q4" value="Нет">
-                    <label for="q4_no">Нет</label>
-                </div>
-            </div>
-    
-            <div class="survey-question">
-                <p>5. Установлено ли то, в каком порядке и каким способом передаются права на КИП, и прочая документация?</p>
-                <div class="survey-options">
-                    <input type="radio" id="q5_yes" name="q5" value="Да">
-                    <label for="q5_yes">Да</label>
-                    
-                    <input type="radio" id="q5_no" name="q5" value="Нет">
-                    <label for="q5_no">Нет</label>
-                </div>
-            </div>
-    
-            <div class="survey-question">
-                <p>6. Установлено ли договором то, за кем лежит бремя уплаты пошлины за регистрацию договора?</p>
-                <div class="survey-options">
-                    <input type="radio" id="q6_yes" name="q6" value="Да">
-                    <label for="q6_yes">Да</label>
-                    
-                    <input type="radio" id="q6_no" name="q6" value="Нет">
-                    <label for="q6_no">Нет</label>
-                </div>
-            </div>
-        </div>
-
-        <h2 class="toggle-section" onclick="toggleSection('3')">Риски связанные с конкуренцией</h2>
-        <div id="3" class="survey-section">
-            <div class="survey-question">
-                <p>7. Включено ли условие о запрете предпринимательской деятельности в этой же сфере после расторжения договора?</p>
-                <div class="survey-options">
-                    <input type="radio" id="q7_yes" name="q7" value="Да">
-                    <label for="q7_yes">Да</label>
-                    
-                    <input type="radio" id="q7_no" name="q7" value="Нет">
-                    <label for="q7_no">Нет</label>
-                </div>
-            </div>
-
-            <div class="survey-question">
-                <p>8. На какой срок действует запрет?</p>
-                <div class="survey-options">
-                    <input type="radio" id="q8_m3" name="q8" value="Менее 3 лет">
-                    <label for="q8_m3">Менее 3 лет</label>
-                    
-                    <input type="radio" id="q8_b3" name="q8" value="Более 3 лет">
-                    <label for="q8_b3">Более 3 лет</label>
-                </div>
-            </div>
-
-            <div class="survey-question">
-                <p>9. Какая территория действия права на КИП установлена?</p>
-                <div class="survey-options">
-                    <input type="radio" id="q9_1" name="q9" value="РФ">
-                    <label for="q9_1">РФ</label>
-                    
-                    <input type="radio" id="q9_2" name="q9" value="Субъект">
-                    <label for="q9_2">Субъект</label>
-                    
-                    <input type="radio" id="q9_3" name="q9" value="Город (более 100 тыс. населения)">
-                    <label for="q9_3">Город (более 100 тыс. населения)</label>
-    
-                    <input type="radio" id="q9_4" name="q9" value="Город (менее 100 тыс. населения)">
-                    <label for="q9_4">Город (менее 100 тыс. населения)</label>
-    
-                    <input type="radio" id="q8_b3" name="q9" value="Конкретный адрес">
-                    <label for="q9_5">Конкретный адрес</label>
-                </div>
-            </div>
-
-            <div class="survey-question">
-                <p>10. Указан ли район города</p>
-                <div class="survey-options">
-                    <input type="radio" id="q10_yes" name="q10" value="Да">
-                    <label for="q10_yes">Да</label>
-                    
-                    <input type="radio" id="q10_no" name="q10" value="Нет">
-                    <label for="q10_no">Нет</label>
-                </div>
-            </div>
-
-            <div class="survey-question">
-                <p>11. Установлено ли эксклюзивное право на использование КИП пользователем на территории?</p>
-                <div class="survey-options">
-                    <input type="radio" id="q11_yes" name="q11" value="Да">
-                    <label for="q11_yes">Да</label>
-                    
-                    <input type="radio" id="q11_no" name="q11" value="Нет">
-                    <label for="q11_no">Нет</label>
-                </div>
-            </div>
-
-            <div class="survey-question">
-                <p>12. Установлен ли запрет Пользователю на использование имущественного комплекса предприятия для производства сторонних товаров и услуг?</p>
-                <div class="survey-options">
-                    <input type="radio" id="q12_yes" name="q12" value="Да">
-                    <label for="q12_yes">Да</label>
-                    
-                    <input type="radio" id="q12_no" name="q12" value="Нет">
-                    <label for="q12_no">Нет</label>
-                </div>
-            </div>
-        </div>
-        
-        <h2 class="toggle-section" onclick="toggleSection('4')">Риски, связанные с вознаграждением Правообладателя/Франчайзера</h2>
-        <div id="4" class="survey-section">
-            <div class="survey-question">
-                <p>13. Есть ли в тексте договора условие про размер вознаграждения?</p>
-                <div class="survey-options">
-                    <input type="radio" id="q13_yes" name="q13" value="Да">
-                    <label for="q13_yes">Да</label>
-                    
-                    <input type="radio" id="q13_no" name="q13" value="Нет">
-                    <label for="q13_no">Нет</label>
-                </div>
-            </div>
-
-            <div class="survey-question">
-                <p>14. Какие способы вознаграждения Правообладателя/Франчайзера хотите установить?</p>
-                <div class="survey-options">
-                    <input type="radio" id="q14_1" name="q14" value="Только паушальный">
-                    <label for="q14_1">Только паушальный</label>
-                    
-                    <input type="radio" id="q14_2" name="q14" value="Иные">
-                    <label for="q14_2">Иные</label>
-                </div>
-            </div>
-
-            <div class="survey-question">
-                <p>15. Установлен ли срок выплаты вознаграждения?</p>
-                <div class="survey-options">
-                    <input type="radio" id="q15_yes" name="q15" value="Да">
-                    <label for="q15_yes">Да, есть указания на конкретные даты оплаты</label>
-                    
-                    <input type="radio" id="q15_no" name="q15" value="Нет">
-                    <label for="q15_no">Нет</label>
-                </div>
-            </div>
-
-            <div class="survey-question">
-                <p>16. Есть ли указание на то, каким образом будет перечисляться оплата вознаграждения Правообладателю/Франчайзеру?</p>
-                <div class="survey-options">
-                    <input type="radio" id="q16_yes" name="q16" value="Да">
-                    <label for="q16_yes">Да, есть</label>
-                    
-                    <input type="radio" id="q16_no" name="q16" value="Нет">
-                    <label for="q16_no">Нет</label>
-                </div>
-            </div>
-
-            <div class="survey-question">
-                <p>17. Есть ли условие, на которых Стороны могут пересматривать выплаты?</p>
-                <div class="survey-options">
-                    <input type="radio" id="q17_yes" name="q17" value="Да">
-                    <label for="q17_yes">Да, есть</label>
-                    
-                    <input type="radio" id="q17_no" name="q17" value="Нет">
-                    <label for="q17_no">Нет</label>
-                </div>
-            </div>
-        </div>
-        
-        <h2 class="toggle-section" onclick="toggleSection('5')">Риски, связанные с коммерческой субконцессией</h2>
-        <div id="5" class="survey-section">
-            <div class="survey-question">
-                <p>18. Пользователь/Франчайзи вправе разрешать использовать КИП (комплекс исключительных прав) другим лицам?</p>
-                <div class="survey-options">
-                    <input type="radio" id="q18_yes" name="q18" value="Да">
-                    <label for="q18_yes">Да, впервые</label>
-                    
-                    <input type="radio" id="q18_no" name="q18" value="Нет">
-                    <label for="q18_no">Нет</label>
-                </div>
-            </div>
-
-            <div class="survey-question">
-                <p>19. Есть ли проект дополнительного соглашения к этому договору, в котором прописаны условия, на которых Правообладатель/Франчайзер разрешает Пользователю/Франчайзи коммерческую субконцессию?</p>
-                <div class="survey-options">
-                    <input type="radio" id="q19_yes" name="q19" value="Да">
-                    <label for="q19_yes">Да, есть</label>
-                    
-                    <input type="radio" id="q19_no" name="q19" value="Нет">
-                    <label for="q19_no">Нет</label>
-                </div>
-            </div>
-        </div>
-
-        <h2 class="toggle-section" onclick="toggleSection('6')">Риски про ответственность Сторон договора</h2>
-        <div id="6" class="survey-section">
-            <div class="survey-question">
-                <p>20. Есть ли в тексте договора помимо общих положений об ответственности Сторон специальные условия ответственности?</p>
-                <div class="survey-options">
-                    <input type="radio" id="q20_yes" name="q20" value="Да">
-                    <label for="q20_yes">Да, есть</label>
-                    
-                    <input type="radio" id="q20_no" name="q20" value="Нет">
-                    <label for="q20_no">Нет</label>
-                </div>
-            </div>
-        </div>
-
-        <h2 class="toggle-section" onclick="toggleSection('7')">Риски, связанные с прекращением договора коммерческой концессии</h2>
-        <div id="7" class="survey-section">
-            <div class="survey-question">
-                <p>21. Будут ли в договоре предусматриваться конкретные условия расторжения, особенно если они будут отличаться от общих норм законодательства или предусматривать дополнительные обстоятельства?</p>
-                <div class="survey-options">
-                    <input type="radio" id="q21_yes" name="q21" value="Да">
-                    <label for="q21_yes">Да</label>
-                    
-                    <input type="radio" id="q21_no" name="q21" value="Нет">
-                    <label for="q21_no">Нет</label>
-                </div>
-            </div>
-
-            <div class="survey-question">
-                <p>22. Есть ли в договоре условие про отступное?</p>
-                <div class="survey-options">
-                    <input type="radio" id="q22_yes" name="q22" value="Да">
-                    <label for="q22_yes">Да, есть</label>
-                    
-                    <input type="radio" id="q22_no" name="q22" value="Нет">
-                    <label for="q22_no">Нет</label>
-                </div>
-            </div>
-
-            <div class="survey-question">
-                <p>23. Есть ли условие про претензионный порядок?</p>
-                <div class="survey-options">
-                    <input type="radio" id="q23_yes" name="q23" value="Да">
-                    <label for="q23_yes">Да, есть</label>
-                    
-                    <input type="radio" id="q23_no" name="q23" value="Нет">
-                    <label for="q23_no">Нет</label>
-                </div>
-            </div>
-        </div>  
-    </form>
-    <button type="submit">Отправить</button>
-</div>
-
-<div class="footer">
-    <div class="footer-box"> 
-        Сделано в 2025 году | Подготовила проект Команда 3
-    </div>
-</div>
-
-<script src="script.js"></script>
-
 </body>
-</html> -->
+</html>
