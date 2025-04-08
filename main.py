@@ -28,20 +28,20 @@ def get_risk_statistics(session_id: str):
     # Подключение к базе данных survey.db для вопросов и вариантов ответов
     with sqlite3.connect("survey.db") as conn_survey:
         cursor_survey = conn_survey.cursor()
-        # Запрос на получение всех вопросов
+        # Запрос на получение всех вопросов с категориями
         cursor_survey.execute("""
-        SELECT id, question_text FROM questions
+        SELECT id, question_text, categ FROM questions
         """)
-        questions = cursor_survey.fetchall()
+        questions = {q[0]: {"text": q[1], "categ": q[2]} for q in cursor_survey.fetchall()}
 
         # Запрос на получение всех вариантов ответа
         cursor_survey.execute("""
         SELECT id, option_text FROM options
         """)
-        options = cursor_survey.fetchall()
+        options = {option[0]: option[1] for option in cursor_survey.fetchall()}
 
     # Подключение к базе данных responses.db для ответов и рекомендаций
-    with sqlite3.connect("responses.db") as conn_responses:
+    with sqlite3.connect("survey.db") as conn_responses:
         cursor_responses = conn_responses.cursor()
         # Запрос для получения всех ответов и рекомендаций для указанной сессии
         cursor_responses.execute("""
@@ -52,33 +52,53 @@ def get_risk_statistics(session_id: str):
         responses = cursor_responses.fetchall()
 
     # Структура для хранения статистики
-    result = {"significant": {"count": 0, "recommendations": [], "details": []},
-              "high": {"count": 0, "recommendations": [], "details": []}, 
-              "medium": {"count": 0, "recommendations": [], "details": []},
-              "low": {"count": 0, "recommendations": [], "details": []}}
-
-    # Преобразуем список options в словарь для быстрого поиска
-    options_dict = {option[0]: option[1] for option in options}
+    result = {
+        "total_risks": 0,
+        "by_risk_type": {
+            "significant": {"count": 0, "recommendations": [], "details": []},
+            "high": {"count": 0, "recommendations": [], "details": []}, 
+            "medium": {"count": 0, "recommendations": [], "details": []},
+            "low": {"count": 0, "recommendations": [], "details": []}
+        },
+        "by_category": {}
+    }
 
     # Обработка данных
     for risk_type, recomendations, question_id, option_id in responses:
-        # Находим соответствующий вопрос
-        question = next((q for q in questions if q[0] == question_id), None)
-        if question:
-            question_text = question[1]
+        question = questions.get(question_id)
+        if not question:
+            continue
             
-            # Получаем текст варианта ответа из options_dict
-            option_text = options_dict.get(option_id)
-
-            # Добавляем информацию в соответствующий риск
-            if risk_type in result:
-                result[risk_type]["count"] += 1
-                result[risk_type]["recommendations"].extend(recomendations.split(","))
-                result[risk_type]["details"].append({
-                    "question": question_text,
-                    "answer": option_text,
-                    "recommendations": recomendations.split(",")
-                })
+        question_text = question["text"]
+        category = question["categ"] or "Без категории"
+        option_text = options.get(option_id, "Неизвестный вариант")
+        
+        # Обновляем общее количество рисков
+        result["total_risks"] += 1
+        
+        # Обновляем статистику по типам рисков
+        if risk_type in result["by_risk_type"]:
+            result["by_risk_type"][risk_type]["count"] += 1
+            result["by_risk_type"][risk_type]["recommendations"].extend(recomendations.split(","))
+            result["by_risk_type"][risk_type]["details"].append({
+                "question": question_text,
+                "answer": option_text,
+                "recommendations": recomendations.split(",")
+            })
+        
+        # Обновляем статистику по категориям
+        if category not in result["by_category"]:
+            result["by_category"][category] = {
+                "total": 0,
+                "significant": 0,
+                "high": 0,
+                "medium": 0,
+                "low": 0
+            }
+        
+        result["by_category"][category]["total"] += 1
+        if risk_type in result["by_category"][category]:
+            result["by_category"][category][risk_type] += 1
 
     return result
 

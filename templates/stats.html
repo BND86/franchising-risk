@@ -50,10 +50,26 @@
             margin: 5px 0;
         }
 
-        #risk-pie-chart {
+        #risk-pie-chart, #category-pie-chart {
             max-width: 500px;
             max-height: 500px;
             margin: 20px auto;
+        }
+
+        .chart-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .category-table {
+            margin-top: 20px;
+            width: 80%;
+        }
+
+        .category-table th, .category-table td {
+            padding: 8px;
+            text-align: center;
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -67,7 +83,7 @@
             <th>Тип риска</th>
             <th>Количество</th>
         </tr>
-        {% for key, value in stats.items() %}
+        {% for key, value in stats.by_risk_type.items() %}
         <tr>
             <td>{{ risk_translations[key] }}</td>
             <td>{{ value.count }}</td>
@@ -75,22 +91,53 @@
         {% endfor %}
     </table>
     
-    <h3>Общее количество рисков: {{ total_risks }}</h3>
+    <h3>Общее количество рисков: {{ stats.total_risks }}</h3>
 
     <!-- Круговая диаграмма -->
-    <h3>Распределение рисков:</h3>
-    <canvas id="risk-pie-chart"></canvas>
+    <div class="chart-container">
+        <div>
+            <h3>Распределение рисков по типам:</h3>
+            <canvas id="risk-pie-chart"></canvas>
+        </div>
+        <div>
+            <h3>Распределение рисков по категориям:</h3>
+            <canvas id="category-pie-chart"></canvas>
+        </div>
+    </div>
+
+    <h3>Статистика по категориям:</h3>
+    <table class="category-table">
+        <tr>
+            <th>Категория</th>
+            <th>Всего</th>
+            <th>Существенные</th>
+            <th>Высокие</th>
+            <th>Средние</th>
+            <th>Незначительные</th>
+        </tr>
+        {% for category, data in stats.by_category.items() %}
+        <tr>
+            <td>{{ category }}</td>
+            <td>{{ data.total }}</td>
+            <td>{{ data.significant }}</td>
+            <td>{{ data.high }}</td>
+            <td>{{ data.medium }}</td>
+            <td>{{ data.low }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
     <script>
-        // Подготовка данных для круговой диаграммы
+        // Подготовка данных для круговой диаграммы типов рисков
         const riskStats = {
-            "significant": {{ stats['significant'].count }},
-            "high": {{ stats['high'].count }},
-            "medium": {{ stats['medium'].count }},
-            "low": {{ stats['low'].count }},
+            "significant": {{ stats.by_risk_type['significant'].count }},
+            "high": {{ stats.by_risk_type['high'].count }},
+            "medium": {{ stats.by_risk_type['medium'].count }},
+            "low": {{ stats.by_risk_type['low'].count }},
         };
 
-        const ctx = document.getElementById('risk-pie-chart').getContext('2d');
-        const riskPieChart = new Chart(ctx, {
+        const ctxRisk = document.getElementById('risk-pie-chart').getContext('2d');
+        const riskPieChart = new Chart(ctxRisk, {
             type: 'pie',
             data: {
                 labels: ['Существенный риск', 'Высокий риск', 'Средний риск', 'Незначительный риск'],
@@ -118,11 +165,47 @@
                 }
             }
         });
+
+        // Подготовка данных для круговой диаграммы категорий
+        const categoryLabels = {{ stats.by_category.keys()|list|tojson }};
+        const categoryData = {{ stats.by_category.values()|map(attribute='total')|list|tojson }};
+
+        const ctxCategory = document.getElementById('category-pie-chart').getContext('2d');
+        const categoryPieChart = new Chart(ctxCategory, {
+            type: 'pie',
+            data: {
+                labels: categoryLabels,
+                datasets: [{
+                    label: 'Категории',
+                    data: categoryData,
+                    backgroundColor: [
+                        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', 
+                        '#9966FF', '#FF9F40', '#8AC249', '#EA5F89'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.label + ": " + tooltipItem.raw;
+                            }
+                        }
+                    }
+                }
+            }
+        });
     </script>
 
     <h3>Рекомендации:</h3>
 
-    {% for key, value in stats.items() %}
+    {% for key, value in stats.by_risk_type.items() %}
         {% if value.count > 0 %}
         <div class="risk-block">
             <h4>{{ risk_translations[key] }}:</h4>
