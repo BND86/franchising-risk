@@ -1,11 +1,14 @@
 import sqlite3
-from fastapi import FastAPI, Form, Request, Query
+from fastapi import FastAPI, Form, Request, Query, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from database import get_questions, save_response
 from uuid import uuid4
 from fastapi.responses import RedirectResponse
+
+from repo import Repository
+from dependencies import get_user_repo
+
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static", html=True), name="static")
@@ -50,9 +53,10 @@ async def read_root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 @app.get("/user", response_class=HTMLResponse)
-async def survey_page(request: Request):
+async def survey_page(request: Request,
+                      repo: Repository = Depends(get_user_repo)):
     session_id = get_session_id(request)  # Получаем сессию пользователя
-    questions = get_questions()  # Синхронная работа с базой данных
+    questions = await repo.get_questions()  # Acинхронная работа с базой данных
     return templates.TemplateResponse("user.html", {"request": request, "questions": questions, "session_id": session_id})
 
 @app.get("/owner", response_class=HTMLResponse)
@@ -72,7 +76,8 @@ def index(request: Request, session_id: str = Query(None, description="Session I
     return templates.TemplateResponse("stats.html", {"request": request, "stats": stats, "session_id": session_id})
 
 @app.post("/submit")
-async def submit_survey(request: Request):
+async def submit_survey(request: Request,
+                        repo: Repository = Depends(get_user_repo)):
     form_data = await request.form()
     session_id = get_session_id(request)  # Идентификатор сессии пользователя    
     # Обработка данных формы
@@ -80,7 +85,7 @@ async def submit_survey(request: Request):
         if "_" in key:  # id вопроса и id ответа
             question_id, option_id = map(int, key.split("_"))
             risk_type, risk_value = value.split(",")
-            save_response(session_id, question_id, option_id, risk_type, int(risk_value))  # Синхронная запись
+            await repo.save_response(session_id, question_id, option_id, risk_type, int(risk_value))  # Асинхронная запись
     
     # После обработки данных перенаправляем пользователя на страницу /stats.html
     return RedirectResponse(url=f"/stats.html?session_id={session_id}", status_code=303)
