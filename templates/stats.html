@@ -20,46 +20,17 @@
             box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        .risk-block h4 {
-            font-size: 18px;
-            color: #333;
-        }
-
-        .risk-block p {
-            font-size: 16px;
-            margin: 10px 0;
-        }
-
-        .question {
-            font-weight: bold;
-            color: #4CAF50;
-        }
-
-        .answer {
-            color: #2196F3;
-        }
-
-        .recommendation {
-            background-color: #FFEB3B;
-            padding: 10px;
-            border-radius: 5px;
-            font-style: italic;
-        }
-
-        .recommendation p {
-            margin: 5px 0;
-        }
-
-        #risk-pie-chart, #category-pie-chart {
-            max-width: 500px;
-            max-height: 500px;
-            margin: 20px auto;
-        }
-
         .chart-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-around;
+            margin-bottom: 30px;
+        }
+
+        .chart-box {
+            width: 20%; /* уменьшил ширину */
+            min-width: 300px; /* уменьшил минимальную ширину */
+            margin: 10px;
         }
 
         .category-table {
@@ -70,6 +41,33 @@
         .category-table th, .category-table td {
             padding: 8px;
             text-align: center;
+        }
+
+        /* Стили для вопросов, ответов и рекомендаций */
+        .question {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .answer {
+            background-color: #f2f2f2;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .recommendation {
+            background-color: #e0ffe0;
+            border-left: 5px solid #66cc66;
+            padding: 10px;
+            margin-top: 10px;
+            color: #333;
+        }
+
+        .recommendation strong {
+            color: #28a745;
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -93,15 +91,21 @@
     
     <h3>Общее количество рисков: {{ stats.total_risks }}</h3>
 
-    <!-- Круговая диаграмма -->
     <div class="chart-container">
-        <div>
+        <div class="chart-box">
             <h3>Распределение рисков по типам:</h3>
             <canvas id="risk-pie-chart"></canvas>
         </div>
-        <div>
+        <div class="chart-box">
             <h3>Распределение рисков по категориям:</h3>
             <canvas id="category-pie-chart"></canvas>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <div class="chart-box" style="width: 50%;">
+            <h3>Распределение рисков по категориям (без существенных рисков):</h3>
+            <canvas id="category-bar-chart"></canvas>
         </div>
     </div>
 
@@ -133,7 +137,7 @@
             "significant": {{ stats.by_risk_type['significant'].count }},
             "high": {{ stats.by_risk_type['high'].count }},
             "medium": {{ stats.by_risk_type['medium'].count }},
-            "low": {{ stats.by_risk_type['low'].count }},
+            "low": {{ stats.by_risk_type['low'].count }}
         };
 
         const ctxRisk = document.getElementById('risk-pie-chart').getContext('2d');
@@ -195,6 +199,77 @@
                         callbacks: {
                             label: function(tooltipItem) {
                                 return tooltipItem.label + ": " + tooltipItem.raw;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Подготовка данных для столбчатой диаграммы по категориям (без существенных рисков)
+        const categoryLabelsBar = {{ stats.by_category.keys()|list|tojson }};
+        const lowData = {{ stats.by_category.values()|map(attribute='low')|list|tojson }};
+        const mediumData = {{ stats.by_category.values()|map(attribute='medium')|list|tojson }};
+        const highData = {{ stats.by_category.values()|map(attribute='high')|list|tojson }};
+
+        const ctxBar = document.getElementById('category-bar-chart').getContext('2d');
+        const categoryBarChart = new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: categoryLabelsBar,
+                datasets: [
+                    {
+                        label: 'Низкий риск',
+                        data: lowData,
+                        backgroundColor: '#66CC66',
+                        borderColor: '#339933',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Средний риск',
+                        data: mediumData,
+                        backgroundColor: '#FFFF00',
+                        borderColor: '#CCCC00',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Высокий риск',
+                        data: highData,
+                        backgroundColor: '#FF9900',
+                        borderColor: '#FF6600',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        stacked: false,
+                        title: {
+                            display: true,
+                            text: 'Категории'
+                        }
+                        
+                    },
+                   
+                    y: {
+                        stacked: false,
+                        title: {
+                            display: true,
+                            text: 'Количество рисков'
+                        },
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.raw;
                             }
                         }
                     }
