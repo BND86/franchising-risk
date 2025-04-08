@@ -45,7 +45,7 @@
                         <input type="radio" 
                             id="q{{ question.id }}_{{ option.id }}"
                             name="{{ question.id }}_{{ option.id }}"
-                            value="{{ option.risk_type }},{{ option.risk_value }}"
+                            value="{{ option.risk_type }}_{{ option.recomendations }}"
                             data-next="{{ option.next_question or '' }}">
                         <label for="q{{ question.id }}_{{ option.id }}">
                             {{ option.text }}

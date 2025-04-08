@@ -9,7 +9,54 @@
         table { width: 50%; border-collapse: collapse; margin-top: 20px; }
         th, td { border: 1px solid black; padding: 8px; text-align: center; }
         th { background-color: #f2f2f2; }
+        h3 { margin-top: 20px; }
+        
+        .risk-block {
+            background-color: #f9f9f9;
+            border: 2px solid #ccc;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .risk-block h4 {
+            font-size: 18px;
+            color: #333;
+        }
+
+        .risk-block p {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        .question {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .answer {
+            color: #2196F3;
+        }
+
+        .recommendation {
+            background-color: #FFEB3B;
+            padding: 10px;
+            border-radius: 5px;
+            font-style: italic;
+        }
+
+        .recommendation p {
+            margin: 5px 0;
+        }
+
+        #risk-pie-chart {
+            max-width: 500px;
+            max-height: 500px;
+            margin: 20px auto;
+        }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <h2>Статистика рисков</h2>
@@ -19,16 +66,81 @@
         <tr>
             <th>Тип риска</th>
             <th>Количество</th>
-            <th>Сумма риска</th>
         </tr>
         {% for key, value in stats.items() %}
         <tr>
-            <td>{{ key }}</td>
+            <td>{{ risk_translations[key] }}</td>
             <td>{{ value.count }}</td>
-            <td>{{ value.sum }}</td>
         </tr>
         {% endfor %}
     </table>
+    
+    <h3>Общее количество рисков: {{ total_risks }}</h3>
+
+    <!-- Круговая диаграмма -->
+    <h3>Распределение рисков:</h3>
+    <canvas id="risk-pie-chart"></canvas>
+    <script>
+        // Подготовка данных для круговой диаграммы
+        const riskStats = {
+            "significant": {{ stats['significant'].count }},
+            "high": {{ stats['high'].count }},
+            "medium": {{ stats['medium'].count }},
+            "low": {{ stats['low'].count }},
+        };
+
+        const ctx = document.getElementById('risk-pie-chart').getContext('2d');
+        const riskPieChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Существенный риск', 'Высокий риск', 'Средний риск', 'Незначительный риск'],
+                datasets: [{
+                    label: 'Риски',
+                    data: [riskStats.significant, riskStats.high, riskStats.medium, riskStats.low],
+                    backgroundColor: ['#FF0000', '#FF9900', '#FFFF00', '#66CC66'],
+                    borderColor: ['#DD0000', '#FF6600', '#CCCC00', '#339933'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.label + ": " + tooltipItem.raw;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+    <h3>Рекомендации:</h3>
+
+    {% for key, value in stats.items() %}
+        {% if value.count > 0 %}
+        <div class="risk-block">
+            <h4>{{ risk_translations[key] }}:</h4>
+            {% for detail in value.details %}
+            <div>
+                <p class="question"><strong>Вопрос:</strong> {{ detail.question }}</p>
+                <p class="answer"><strong>Ответ:</strong> {{ detail.answer }}</p>
+                {% if detail.recommendations %}
+                <div class="recommendation">
+                    <strong>Рекомендация:</strong>
+                    <p>{{ detail.recommendations|join(', ') }}</p>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endfor %}
     {% elif session_id %}
     <p>Нет данных для session_id: <b>{{ session_id }}</b></p>
     {% else %}
