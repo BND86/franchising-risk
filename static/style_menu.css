@@ -106,8 +106,8 @@ nav { /*рсположение кнопок навигации на страни
 
 .grey-box-manual {
     font-family: "Courier New", Courier, monospace; /* Моноширинный шрифт */
-    width: 40%; /* Ширина окна */
-    max-width: 700px; /* Максимальная ширина */
+    width: 60%; /* Ширина окна */
+    max-width: 800px; /* Максимальная ширина */
     height: auto; /* Высота по контенту */
     min-height: 450px; /* Минимальная высота */
     background-color: #D3D3D3; /* Белый фон */
