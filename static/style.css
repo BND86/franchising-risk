@@ -105,7 +105,7 @@ nav {
 }
 
 .survey-question {
-    display: inline-block;
+    display: block;
     background: #D3D3D3;
     padding: 20px;
     border-radius: 20px;
@@ -127,7 +127,7 @@ nav {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #D3D3D3;
+    background: #bbb;
     padding: 15px;
     border-radius: 15px;
     font-size: 16px;
@@ -141,13 +141,13 @@ nav {
 }
 
 .survey-options input[type="radio"]:checked + label {
-    background: #aaa; 
+    background: #808080; 
     color: white;
     font-weight: bold;
 }
 
 .survey-options label:hover {
-    background: #bbb;
+    background: #aaa;
 }
 
 .survey-section {
