@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Результаты анализа | ПроФраншиза</title>
+    <link rel="stylesheet" href="/static/style_user.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Дополнительные стили для результатов */
+        .result-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .result-title {
+            color: var(--secondary-color);
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .risk-badge {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 50px;
+        }
+        
+        .progress {
+            height: 20px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        
+        .progress-bar {
+            border-radius: 10px;
+        }
+        
+        .risk-item {
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            background-color: #f8f9fa;
+            transition: var(--transition);
+        }
+        
+        .risk-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tooltip-icon {
+            cursor: pointer;
+            color: var(--primary-color);
+            margin-left: 5px;
+        }
+        
+        .explanation {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        
+        .alert-box {
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin: 15px 0;
+        }
+        
+        .success-bg {
+            background-color: rgba(40, 167, 69, 0.1);
+            border-left: 4px solid #28a745;
+        }
+        
+        .warning-bg {
+            background-color: rgba(255, 193, 7, 0.1);
+            border-left: 4px solid #ffc107;
+        }
+        
+        .danger-bg {
+            background-color: rgba(220, 53, 69, 0.1);
+            border-left: 4px solid #dc3545;
+        }
+        
+        .info-bg {
+            background-color: rgba(23, 162, 184, 0.1);
+            border-left: 4px solid #17a2b8;
+        }
+        
+        .geo-level {
+            margin-bottom: 15px;
+            padding-left: 15px;
+            border-left: 4px solid;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="title-box">
+        ПроФраншиза
+    </div>
+    
+    <nav>
+        <a class="nav-button" href="/">Меню</a>
+        <a class="nav-button" href="/user">Пользователь</a>
+        <a class="nav-button" href="/owner">Правообладатель</a>
+        <a class="nav-button" href="/glossary">Глоссарий</a>
+    </nav>
+</header>
+
+<main>
+    <section class="content-wrapper">
+        <h1 class="section-title"><i class="fas fa-chart-pie"></i> Результаты анализа франшизы</h1>
+        
+        <div class="result-card">
+            <h2 class="result-title"><i class="fas fa-coins"></i> Финансовые показатели</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>EBITDA 
+                        <span class="tooltip-icon" data-bs-toggle="tooltip" data-bs-placement="right" 
+                              title="Прибыль до вычета процентов, налогов, износа и амортизации">
+                            <i class="fas fa-info-circle"></i>
+                        </span>
+                    </h5>
+                    <p class="h4">{{ "{:,.2f}".format(results.finance.ebitda|round(2)) }} тыс. руб.</p>
+                    <div class="explanation">
+                        EBITDA (Earnings Before Interest, Taxes, Depreciation and Amortization) - показатель операционной прибыли компании до вычета процентов по кредитам, налогов, амортизации и износа. Позволяет оценить операционную эффективность бизнеса без учета влияния структуры капитала и налоговой политики.
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h5>Чистый денежный доход 
+                        <span class="tooltip-icon" data-bs-toggle="tooltip" data-bs-placement="right" 
+                              title="Фактический денежный поток после всех расходов">
+                            <i class="fas fa-info-circle"></i>
+                        </span>
+                    </h5>
+                    <p class="h4">{{ "{:,.2f}".format(results.finance.net_income|round(2)) }} тыс. руб.</p>
+                    <div class="explanation">
+                        Чистый денежный доход (Net Income) - это конечный финансовый результат деятельности компании после уплаты всех налогов, процентов по кредитам и других обязательных платежей. Показывает, сколько реальных денег остается в распоряжении бизнеса.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="result-card">
+            <h2 class="result-title"><i class="fas fa-exclamation-triangle"></i> Оценка риска</h2>
+            <div class="mb-4">
+                <h5>Общий уровень риска: <span class="risk-badge">{{ results.risk.total_risk|round(2) }}</span></h5>
+                <div class="progress">
+                    <div class="progress-bar 
+                        {% if results.risk.total_risk <= 3 %}bg-success
+                        {% elif results.risk.total_risk <= 6 %}bg-primary
+                        {% elif results.risk.total_risk <= 8 %}bg-warning
+                        {% else %}bg-danger{% endif %}" 
+                        role="progressbar" 
+                        style="width: {{ results.risk.total_risk * 10 }}%">
+                    </div>
+                </div>
+                <div class="explanation mt-2">
+                    {% if results.risk.total_risk <= 3 %}
+                    <span class="text-success"><strong>Низкий риск</strong>: безопасное вложение, стабильный бизнес</span>
+                    {% elif results.risk.total_risk <= 6 %}
+                    <span class="text-primary"><strong>Умеренный риск</strong>: стандартные франшизы с предсказуемой окупаемостью</span>
+                    {% elif results.risk.total_risk <= 8 %}
+                    <span class="text-warning"><strong>Высокий риск</strong>: требуется тщательный анализ и резервы</span>
+                    {% else %}
+                    <span class="text-danger"><strong>Критический риск</strong>: возможно, стоит рассмотреть другие варианты</span>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <h5 class="mt-4 mb-3"><i class="fas fa-list-ol"></i> Разбивка по категориям риска:</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="risk-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-piggy-bank"></i> Высокие стартовые инвестиции</span>
+                            <span class="badge bg-primary rounded-pill">{{ (results.risk.risk_factors.high_start_investment*10)|round(2) }}</span>
+                        </div>
+                        <div class="explanation mt-2 small">
+                            {% set start_invest = results.risk.risk_factors.high_start_investment*10 %}
+                            {% if start_invest <= 3 %}
+                            <span class="text-success">Инвестиции ниже среднего по рынку</span>
+                            {% elif start_invest <= 5 %}
+                            <span>Стандартный уровень для данного типа бизнеса</span>
+                            {% elif start_invest <= 7 %}
+                            <span class="text-warning">Требуются значительные вложения</span>
+                            {% else %}
+                            <span class="text-danger">Очень высокий порог входа (риск долгой окупаемости)</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="risk-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-receipt"></i> Высокие операционные расходы</span>
+                            <span class="badge bg-primary rounded-pill">{{ (results.risk.risk_factors.high_operational_expenses*10)|round(2) }}</span>
+                        </div>
+                        <div class="explanation mt-2 small">
+                            {% set op_expenses = results.risk.risk_factors.high_operational_expenses*10 %}
+                            {% if op_expenses <= 3 %}
+                            <span class="text-success">Низкие текущие затраты (выгодно)</span>
+                            {% elif op_expenses <= 6 %}
+                            <span>Типичные расходы для франшизы</span>
+                            {% elif op_expenses <= 8 %}
+                            <span class="text-warning">Существенная нагрузка на cash flow</span>
+                            {% else %}
+                            <span class="text-danger">Опасный уровень (может "съедать" всю прибыль)</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="risk-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-chart-line"></i> Нестабильность денежного потока</span>
+                            <span class="badge bg-primary rounded-pill">{{ (results.risk.risk_factors.cash_flow_instability*10)|round(2) }}</span>
+                        </div>
+                        <div class="explanation mt-2 small">
+                            {% set cash_flow = results.risk.risk_factors.cash_flow_instability*10 %}
+                            {% if cash_flow <= 2 %}
+                            <span class="text-success">Стабильные поступления (например, аптека в жилом районе)</span>
+                            {% elif cash_flow <= 5 %}
+                            <span>Сезонные колебания (кафе у моря)</span>
+                            {% elif cash_flow <= 8 %}
+                            <span class="text-warning">Непредсказуемые доходы</span>
+                            {% else %}
+                            <span class="text-danger">Высокая волатильность (риск кассовых разрывов)</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="risk-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-link"></i> Зависимость от франчайзера</span>
+                            <span class="badge bg-primary rounded-pill">{{ (results.risk.risk_factors.franchisor_dependence*10)|round(2) }}</span>
+                        </div>
+                        <div class="explanation mt-2 small">
+                            {% set dependence = results.risk.risk_factors.franchisor_dependence*10 %}
+                            {% if dependence <= 3 %}
+                            <span class="text-success">Минимальная (есть свобода действий)</span>
+                            {% elif dependence <= 6 %}
+                            <span>Стандартные условия договора</span>
+                            {% elif dependence <= 9 %}
+                            <span class="text-warning">Жёсткий контроль головной компании</span>
+                            {% else %}
+                            <span class="text-danger">Полная зависимость (риск изменения условий)</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                {% set total_risk = results.risk.total_risk %}
+                {% set start_invest = results.risk.risk_factors.high_start_investment*10 %}
+                {% set op_expenses = results.risk.risk_factors.high_operational_expenses*10 %}
+                {% set cash_flow = results.risk.risk_factors.cash_flow_instability*10 %}
+                {% set dependence = results.risk.risk_factors.franchisor_dependence*10 %}
+                
+                {% if total_risk <= 5 and start_invest <= 6 and op_expenses <= 4 and cash_flow <= 3 and dependence <= 5 %}
+                <div class="alert-box success-bg">
+                    <strong><i class="fas fa-check-circle"></i> Хороший вариант</strong>: Низкий общий риск и приемлемые значения по всем факторам риска.
+                </div>
+                {% elif (start_invest > 7 or op_expenses > 8 or cash_flow > 8 or dependence > 9) and total_risk > 7 %}
+                <div class="alert-box danger-bg">
+                    <strong><i class="fas fa-exclamation-circle"></i> Критично</strong>: Высокий общий риск в сочетании с опасными значениями отдельных факторов.
+                </div>
+                {% elif (start_invest > 7 and op_expenses > 7) or (cash_flow > 7 and dependence > 7) or (start_invest > 7 and cash_flow > 7) %}
+                <div class="alert-box warning-bg">
+                    <strong><i class="fas fa-exclamation-triangle"></i> Требует осторожности</strong>: Несколько показателей в "красной зоне". Необходим тщательный анализ.
+                </div>
+                {% else %}
+                <div class="alert-box info-bg">
+                    <strong><i class="fas fa-info-circle"></i> Средний риск</strong>: Отдельные факторы требуют внимания, но в целом франшиза может быть перспективной.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="result-card">
+            <h2 class="result-title"><i class="fas fa-map-marked-alt"></i> Геоаналитика</h2>
+            <h5>Индекс привлекательности локации: <span class="risk-badge">{{ results.geo.attractiveness_index|round(2) }}</span></h5>
+            {% set progress_percent = (results.geo.attractiveness_index )|round(0) %}
+            <div class="progress">
+                <div class="progress-bar 
+                    {% if progress_percent < 30 %}bg-danger
+                    {% elif progress_percent < 70 %}bg-warning
+                    {% else %}bg-success{% endif %}" 
+                    role="progressbar" 
+                    style="width: {{ progress_percent }}%">
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <h5><i class="fas fa-map-pin"></i> Оценка привлекательности локации</h5>
+                <div class="geo-level" style="border-color: #ff4d4d;">
+                    <strong>0–30 → Низкая привлекательность</strong>
+                    <div class="explanation">
+                        Очень слабый пешеходный/автомобильный трафик<br>
+                        Минимальное количество поисковых запросов<br>
+                        Высокая конкуренция
+                    </div>
+                </div>
+                
+                <div class="geo-level" style="border-color: #ffbf00;">
+                    <strong>30–70 → Средняя привлекательность</strong>
+                    <div class="explanation">
+                        Умеренный трафик и запросы<br>
+                        Приемлемое количество конкурентов
+                    </div>
+                </div>
+                
+                <div class="geo-level" style="border-color: #00cc00;">
+                    <strong>70–100 → Высокая привлекательность</strong>
+                    <div class="explanation">
+                        Хороший трафик (пешеходы + автомобили)<br>
+                        Много поисковых запросов<br>
+                        Мало конкурентов
+                    </div>
+                </div>
+                
+                <div class="geo-level" style="border-color: #006600;">
+                    <strong>&gt;100 → Очень высокая привлекательность</strong>
+                    <div class="explanation">
+                        Идеальное сочетание трафика, спроса и отсутствия конкуренции<br>
+                        Встречается редко
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="result-card">
+            <h2 class="result-title"><i class="fas fa-database"></i> Введенные данные</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5><i class="fas fa-wallet"></i> Финансы</h5>
+                    <ul class="list-group">
+                        <li class="list-group-item">Стартовые инвестиции: {{ "{:,.2f}".format(results.input_data.start_investment) }} руб.</li>
+                        <li class="list-group-item">Паушальный взнос: {{ "{:,.2f}".format(results.input_data.franchise_fee) }} руб.</li>
+                        <li class="list-group-item">Роялти: {{ "{:,.2f}".format(results.input_data.royalty_percent) }}%</li>
+                        <li class="list-group-item">Срок окупаемости: {{ results.input_data.payback_period }} мес.</li>
+                        <li class="list-group-item">Оборот в месяц: {{ "{:,.2f}".format(results.input_data.monthly_turnover) }} руб.</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5><i class="fas fa-map-marker-alt"></i> Геоаналитика</h5>
+                    <ul class="list-group">
+                        <li class="list-group-item">Пешеходный трафик: {{ "{:,.0f}".format(results.input_data.pedestrian_traffic) }} чел./день</li>
+                        <li class="list-group-item">Автомобильный трафик: {{ "{:,.0f}".format(results.input_data.car_traffic) }} машин/день</li>
+                        <li class="list-group-item">Конкурентов: {{ results.input_data.competitors_count }}</li>
+                        <li class="list-group-item">Поисковые запросы: {{ "{:,.0f}".format(results.input_data.search_queries) }}/мес</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="/economic" class="btn btn-primary"><i class="fas fa-arrow-left"></i> Назад к форме</a>
+        </div>
+    </section>
+</main>
+
+<div class="footer">
+    <div class="footer-box"> 
+        Сделано в 2025 году | Подготовила проект Команда 3
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/static/script.js" defer></script>
+<script>
+    // Активация подсказок Bootstrap
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
+</body>
+</html>

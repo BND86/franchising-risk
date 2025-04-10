@@ -9,12 +9,33 @@ from fastapi.responses import RedirectResponse
 from repo import Repository
 from dependencies import get_user_repo
 
+from typing import Optional
+from pydantic import BaseModel
+from calculator import calculate_results
+
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static", html=True), name="static")
 templates = Jinja2Templates(directory="templates")
 
-DATABASE = "responses.db"
+class InputData(BaseModel):
+    # Финансы
+    start_investment: float
+    franchise_fee: float
+    royalty_percent: float 
+    payback_period: float
+    monthly_turnover: float
+    
+    # Геоаналитика
+    pedestrian_traffic: float 
+    car_traffic: float
+    competitors_count: float
+    search_queries: float
+    
+    # Дополнительные данные
+    operational_expenses: float
+    additional_payments: float
+
 
 # Словарь для перевода типов рисков на русский язык
 RISK_TRANSLATIONS = {
@@ -158,3 +179,12 @@ async def submit_survey(request: Request,
     
     # После обработки данных перенаправляем пользователя на страницу /stats.html
     return RedirectResponse(url=f"/stats.html?session_id={session_id}", status_code=303)
+
+@app.get("/economic")
+async def economic_page(request: Request):
+    return templates.TemplateResponse("economic.html", {"request": request})
+
+@app.post("/result")
+async def result_page(request: Request, input_data: InputData = Form(...)):
+    results = calculate_results(input_data.dict())
+    return templates.TemplateResponse("result_econom.html", {"request": request, "results": results})
