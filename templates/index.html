@@ -19,78 +19,116 @@
         <a class="nav-button" href="/glossary">Глоссарий</a>
     </nav>
 </header>
-<div class="container1">
-    <div class="grey-box-manual">
-        Краткая информация о продукте: 
-    </div>
+
+<div class="content-wrapper">
+    <p style="margin-top: 15px; color: var(--secondary-color); font-weight: 500;">
+        Инструмент для анализа договорных и экономических рисков во франчайзинге
+    </p>
 </div>
 
-<div class="container2">
-    <div class="grey-box-manual"> 
-        <h1>Инструкция по использованию инструмента</h1>
+<div class="content-wrapper"> 
+    <h1 style="text-align: center; position: relative; padding-bottom: 15px;">
+        Инструкция по использованию инструмента
+        <span style="content: ''; display: block; width: 80px; height: 4px; 
+        background: linear-gradient(to right, var(--primary-color), var(--accent-color)); 
+        margin: 15px auto 0; border-radius: 2px;"></span>
+    </h1>
 
-    <section>
-        <h2>1. Выбор роли</h2>
+    <section style="margin-bottom: 30px;">
+        <h2 style="color: var(--primary-color); display: flex; align-items: center;">
+            <span style="background: var(--primary-color); color: white; width: 30px; height: 30px; 
+            border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; 
+            margin-right: 10px; font-size: 0.9rem;">1</span>
+            Выбор роли
+        </h2>
         <p>При запуске инструмента выберите свою роль:</p>
-        <ul>
-            <li><strong>Пользователь</strong> – если вы хотите провести анализ договорных и экономических рисков.</li>
-            <li><strong>Правообладатель</strong> – если вам доступен только анализ договорных рисков.</li>
+        <ul style="margin-left: 40px;">
+            <li style="margin-bottom: 10px;"><strong>Пользователь</strong> – если вы хотите провести анализ договорных и экономических рисков.</li>
+            <li style="margin-bottom: 10px;"><strong>Правообладатель</strong> – если вам доступен только анализ договорных рисков.</li>
         </ul>
     </section>
 
-    <hr>
+    <hr style="border: none; height: 1px; background: linear-gradient(to right, transparent, rgba(67, 97, 238, 0.3), transparent); margin: 40px 0;">
+
+    <section style="margin-bottom: 30px;">
+        <h3 style="color: var(--secondary-color); font-size: 1.3rem; margin-bottom: 20px; 
+        padding-bottom: 8px; border-bottom: 2px solid rgba(67, 97, 238, 0.1);">
+            Для пользователя
+        </h3>
+        
+        <div style="background: rgba(67, 97, 238, 0.03); border-radius: var(--border-radius); padding: 20px; margin-bottom: 25px;">
+            <h4 style="color: var(--primary-color); font-size: 1.1rem; margin-bottom: 10px;">
+                2.1 Экономический анализ
+            </h4>
+            <p>Если у вас есть готовые финансовые данные:</p>
+            <ul style="margin-left: 30px;">
+                <li style="margin-bottom: 8px;">Выберите "Экономический анализ".</li>
+                <li style="margin-bottom: 8px;">Загрузите финансовую отчетность или введите данные вручную.</li>
+                <li>Получите отчет с оценкой финансовых рисков и рекомендациями.</li>
+            </ul>
+        </div>
+
+        <div style="background: rgba(67, 97, 238, 0.03); border-radius: var(--border-radius); padding: 20px; margin-bottom: 25px;">
+            <h4 style="color: var(--primary-color); font-size: 1.1rem; margin-bottom: 10px;">
+                2.2 Анализ экономических рисков (без готовых данных)
+            </h4>
+            <p>Если у вас нет финансовой отчетности:</p>
+            <ul style="margin-left: 30px;">
+                <li style="margin-bottom: 8px;">Выберите "Ознакомиться с экономическими рисками".</li>
+                <li>Изучите типовые риски и способы их минимизации.</li>
+            </ul>
+        </div>
+
+        <div style="background: rgba(67, 97, 238, 0.03); border-radius: var(--border-radius); padding: 20px;">
+            <h4 style="color: var(--primary-color); font-size: 1.1rem; margin-bottom: 10px;">
+                2.3 Договорной анализ
+            </h4>
+            <p>Перед заключением договора:</p>
+            <ul style="margin-left: 30px;">
+                <li style="margin-bottom: 8px;">Рекомендуется сначала ознакомиться с "Недоговорными рисками" (например, законодательные изменения, форс-мажор).</li>
+                <li style="margin-bottom: 8px;">Затем выберите "Анализ договорных рисков".</li>
+                <li style="margin-bottom: 8px;">Загрузите договор или ответьте на вопросы системы.</li>
+                <li>Получите отчет с выявленными слабыми местами и советами по доработке.</li>
+            </ul>
+        </div>
+    </section>
+
+    <hr style="border: none; height: 1px; background: linear-gradient(to right, transparent, rgba(67, 97, 238, 0.3), transparent); margin: 40px 0;">
+
+    <section style="margin-bottom: 30px;">
+        <h3 style="color: var(--secondary-color); font-size: 1.3rem; margin-bottom: 20px; 
+        padding-bottom: 8px; border-bottom: 2px solid rgba(67, 97, 238, 0.1);">
+            Для правообладателя
+        </h3>
+        
+        <div style="background: rgba(67, 97, 238, 0.03); border-radius: var(--border-radius); padding: 20px;">
+            <h4 style="color: var(--primary-color); font-size: 1.1rem; margin-bottom: 10px;">
+                3.1 Договорной анализ
+            </h4>
+            <ul style="margin-left: 30px;">
+                <li style="margin-bottom: 8px;">Рекомендуется сначала изучить "Недоговорные риски".</li>
+                <li style="margin-bottom: 8px;">Затем выберите "Анализ договорных рисков".</li>
+                <li style="margin-bottom: 8px;">Загрузите договор или заполните форму.</li>
+                <li>Получите отчет с возможными правовыми угрозами и способами их устранения.</li>
+            </ul>
+        </div>
+    </section>
+
+    <hr style="border: none; height: 1px; background: linear-gradient(to right, transparent, rgba(67, 97, 238, 0.3), transparent); margin: 40px 0;">
 
     <section>
-        <h3>Для пользователя</h3>
-        <h4>2.1 Экономический анализ</h4>
-        <p>Если у вас есть готовые финансовые данные:</p>
-        <ul>
-            <li>Выберите "Экономический анализ".</li>
-            <li>Загрузите финансовую отчетность или введите данные вручную.</li>
-            <li>Получите отчет с оценкой финансовых рисков и рекомендациями.</li>
+        <h3 style="color: var(--secondary-color); font-size: 1.3rem; margin-bottom: 20px; 
+        padding-bottom: 8px; border-bottom: 2px solid rgba(67, 97, 238, 0.1);">
+            Дополнительные рекомендации
+        </h3>
+        <ul style="margin-left: 30px;">
+            <li style="margin-bottom: 8px;">Сохраняйте отчеты для дальнейшего использования.</li>
+            <li style="margin-bottom: 15px;">При возникновении сложностей обратитесь в поддержку.</li>
         </ul>
-
-        <h4>2.2 Анализ экономических рисков (без готовых данных)</h4>
-        <p>Если у вас нет финансовой отчетности:</p>
-        <ul>
-            <li>Выберите "Ознакомиться с экономическими рисками".</li>
-            <li>Изучите типовые риски и способы их минимизации.</li>
-        </ul>
-
-        <h4>2.3 Договорной анализ</h4>
-        <p>Перед заключением договора:</p>
-        <ul>
-            <li>Рекомендуется сначала ознакомиться с "Недоговорными рисками" (например, законодательные изменения, форс-мажор).</li>
-            <li>Затем выберите "Анализ договорных рисков".</li>
-            <li>Загрузите договор или ответьте на вопросы системы.</li>
-            <li>Получите отчет с выявленными слабыми местами и советами по доработке.</li>
-        </ul>
+        <div class="warning" style="margin-top: 20px;">
+            Инструмент помогает минимизировать риски, но не заменяет консультацию юриста или экономиста.
+        </div>
     </section>
-
-    <hr>
-
-    <section>
-        <h3>Для правообладателя</h3>
-        <h4>3.1 Договорной анализ</h4>
-        <ul>
-            <li>Рекомендуется сначала изучить "Недоговорные риски".</li>
-            <li>Затем выберите "Анализ договорных рисков".</li>
-            <li>Загрузите договор или заполните форму.</li>
-            <li>Получите отчет с возможными правовыми угрозами и способами их устранения.</li>
-        </ul>
-    </section>
-
-    <hr>
-
-    <section>
-        <h3>Дополнительные рекомендации</h3>
-        <ul>
-            <li>Сохраняйте отчеты для дальнейшего использования.</li>
-            <li>При возникновении сложностей обратитесь в поддержку.</li>
-        </ul>
-        <p>Инструмент помогает минимизировать риски, но не заменяет консультацию юриста или экономиста.</p>
-    </section>
-    </div>
 </div>
 
 <div class="footer">

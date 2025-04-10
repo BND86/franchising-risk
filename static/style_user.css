@@ -64,9 +64,6 @@ main {
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
     margin: 0 auto;
-    text-align: center;
-    padding: 25px;
-    margin-bottom: 20px;
 }
 
 nav {
