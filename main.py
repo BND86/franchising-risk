@@ -45,7 +45,7 @@ def get_risk_statistics(session_id: str):
         cursor_responses = conn_responses.cursor()
         # Запрос для получения всех ответов и рекомендаций для указанной сессии
         cursor_responses.execute("""
-        SELECT r.risk_type, r.recomendations, r.id_question, r.id_option 
+        SELECT r.risk_type, r.recomendations, r.article, r.link, r.id_question, r.id_option 
         FROM responses r
         WHERE r.session_id = ?
         """, (session_id,))
@@ -55,16 +55,16 @@ def get_risk_statistics(session_id: str):
     result = {
         "total_risks": 0,
         "by_risk_type": {
-            "significant": {"count": 0, "recommendations": [], "details": []},
-            "high": {"count": 0, "recommendations": [], "details": []}, 
-            "medium": {"count": 0, "recommendations": [], "details": []},
-            "low": {"count": 0, "recommendations": [], "details": []}
+            "significant": {"count": 0, "recomendations": [], "article": [], "link": [], "details": []},
+            "high": {"count": 0, "recomendations": [], "article": [], "link": [], "details": []}, 
+            "medium": {"count": 0, "recomendations": [], "article": [], "link": [], "details": []},
+            "low": {"count": 0, "recomendations": [], "article": [], "link": [], "details": []}
         },
         "by_category": {}
     }
 
     # Обработка данных
-    for risk_type, recomendations, question_id, option_id in responses:
+    for risk_type, recomendations, article, link, question_id, option_id in responses:
         question = questions.get(question_id)
         if not question:
             continue
@@ -79,11 +79,15 @@ def get_risk_statistics(session_id: str):
         # Обновляем статистику по типам рисков
         if risk_type in result["by_risk_type"]:
             result["by_risk_type"][risk_type]["count"] += 1
-            result["by_risk_type"][risk_type]["recommendations"].extend(recomendations.split(","))
+            result["by_risk_type"][risk_type]["recomendations"].extend(recomendations.split(","))
+            result["by_risk_type"][risk_type]["article"].extend(article.split(","))
+            result["by_risk_type"][risk_type]["link"].extend(link.split(","))
             result["by_risk_type"][risk_type]["details"].append({
                 "question": question_text,
                 "answer": option_text,
-                "recommendations": recomendations.split(",")
+                "recomendations": recomendations.split(","),
+                "article": article.split(","),
+                "link": link.split(",")
             })
         
         # Обновляем статистику по категориям
@@ -149,8 +153,8 @@ async def submit_survey(request: Request,
     for key, value in form_data.items():
         if "_" in key:  # id вопроса и id ответа
             question_id, option_id = map(int, key.split("_"))
-            risk_type, recomendations = value.split("_")
-            await repo.save_response(session_id, question_id, option_id, risk_type, recomendations)  # Асинхронная запись
+            risk_type, recomendations, article, link = value.split("|")
+            await repo.save_response(session_id, question_id, option_id, risk_type, recomendations, article, link)  # Асинхронная запись
     
     # После обработки данных перенаправляем пользователя на страницу /stats.html
     return RedirectResponse(url=f"/stats.html?session_id={session_id}", status_code=303)

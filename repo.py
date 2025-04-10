@@ -29,7 +29,7 @@ class UserRepository(Repository): # для франчайзи
 
         result = []
         for q in questions:
-            await cursor.execute("SELECT id, option_text, next_question, risk_type, recomendations FROM options WHERE question_id=?", (q[0],))
+            await cursor.execute("SELECT id, option_text, next_question, risk_type, recomendations, article, link FROM options WHERE question_id=?", (q[0],))
             options = await cursor.fetchall()
             result.append(Questions(
                 id=q[0],
@@ -42,12 +42,14 @@ class UserRepository(Repository): # для франчайзи
                                  text=opt[1],
                                  next_question=opt[2],
                                  risk_type=opt[3],
-                                 recomendations=opt[4]) for opt in options]
+                                 recomendations=opt[4],
+                                 article = opt[5],
+                                 link = opt[6]) for opt in options]
             ))
 
         return result
     
-    async def save_response(self, session_id: str, question_id: int, option_id: int, risk_type: str, recomendations: int):
+    async def save_response(self, session_id: str, question_id: int, option_id: int, risk_type: str, recomendations: int, article: str, link: str):
         cursor = await self.responses_db.cursor()
         await cursor.execute('''
             CREATE TABLE IF NOT EXISTS responses (
@@ -56,15 +58,17 @@ class UserRepository(Repository): # для франчайзи
                 id_question INTEGER,
                 id_option INTEGER,
                 risk_type TEXT,
-                recomendations TEXT
+                recomendations TEXT, 
+                article TEXT, 
+                link TEXT
             )
         ''')
         
-        await cursor.execute("INSERT INTO responses (session_id, id_question, id_option, risk_type, recomendations) VALUES (?, ?, ?, ?, ?)",
-                    (session_id, question_id, option_id, risk_type, recomendations))
+        await cursor.execute("INSERT INTO responses (session_id, id_question, id_option, risk_type, recomendations, article, link) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    (session_id, question_id, option_id, risk_type, recomendations, article, link))
         await self.responses_db.commit()
         
         # временно переделал в асинхронную запись, это как правило дольше, но для маленького файла норм
         # потом можно будет вынести в BackgroundTasks синхронную функцию
         async with aiofiles.open("responses.txt", "a") as f:
-            await f.write(f"{session_id}, {question_id}, {option_id}, {risk_type}, {recomendations}\n")
+            await f.write(f"{session_id}, {question_id}, {option_id}, {risk_type}, {recomendations}, {article}, {link}\n")

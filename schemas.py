@@ -8,6 +8,8 @@ class Options(BaseModel):
     next_question: int | str # str для значений NULL
     risk_type: Optional[str] = None  
     recomendations: Optional[str] = None
+    article: Optional[str] = None
+    link: Optional[str] = None
 
 class Questions(BaseModel):
     id: int

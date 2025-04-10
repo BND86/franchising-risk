@@ -34,8 +34,8 @@
                     {% for option in question.options %}
                         <label>
                             <input type="radio" name="{{ question.id }}_{{ option.id }}" 
-                                   value="{{ option.risk_type }},{{ option.risk_value }}"
-                                   data-next="{{ option.next_question or '' }}">
+                                    value="{{ option.risk_type }}|{{ option.recomendations }}|{{ option.article }}|{{ option.link }}"
+                                    data-next="{{ option.next_question or '' }}">
                             {{ option.text }}
                         </label><br>
                     {% endfor %}
@@ -43,8 +43,8 @@
                     {% for option in question.options %}
                         <label>
                             <input type="checkbox" name="{{ question.id }}_{{ option.id }}" 
-                                   value="{{ option.risk_type }},{{ option.risk_value }}"
-                                   data-next="{{ option.next_question or '' }}">
+                                    value="{{ option.risk_type }}|{{ option.recomendations }}|{{ option.article }}|{{ option.link }}"
+                                    data-next="{{ option.next_question or '' }}">
                             {{ option.text }}
                         </label><br>
                     {% endfor %}

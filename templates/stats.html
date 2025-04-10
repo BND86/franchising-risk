@@ -74,10 +74,19 @@
             <div>
                 <p class="question"><strong>Вопрос:</strong> {{ detail.question }}</p>
                 <p class="answer"><strong>Ответ:</strong> {{ detail.answer }}</p>
-                {% if detail.recommendations %}
+                {% if detail.recomendations %}
                 <div class="recommendation">
                     <strong>Рекомендация:</strong>
-                    <p>{{ detail.recommendations|join(', ') }}</p>
+                    <p>{{ detail.recomendations|join(', ') }}</p>
+                    {% if detail.article and detail.article[0] != 'None' and detail.link %}
+                        <p><strong>Статья:</strong> 
+                            <a href="{{ detail.link }}" target="_blank" rel="noopener noreferrer">
+                                {{ detail.article[0] }}
+                            </a>
+                        </p>
+                    {% endif %}
+
+
                 </div>
                 {% endif %}
             </div>
@@ -90,6 +99,7 @@
     {% else %}
     <p>Session ID не был передан.</p>
     {% endif %}
+
 
 <div class="footer">
     <div class="footer-box"> 
