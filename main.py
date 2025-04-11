@@ -47,83 +47,87 @@ RISK_TRANSLATIONS = {
 
 def get_risk_statistics(session_id: str):
     # Подключение к базе данных survey.db для вопросов и вариантов ответов
-    with sqlite3.connect("survey.db") as conn_survey:
-        cursor_survey = conn_survey.cursor()
-        # Запрос на получение всех вопросов с категориями
-        cursor_survey.execute("""
-        SELECT id, question_text, categ FROM questions
-        """)
-        questions = {q[0]: {"text": q[1], "categ": q[2]} for q in cursor_survey.fetchall()}
+    with sqlite3.connect("survey.db") as conn:
+        cursor = conn.cursor()
+        
+        # Получаем все вопросы с категориями
+        cursor.execute("SELECT id, question_text, categ FROM questions")
+        questions = {q[0]: {"text": q[1], "categ": q[2] or "Без категории"} for q in cursor.fetchall()}
 
-        # Запрос на получение всех вариантов ответа
-        cursor_survey.execute("""
-        SELECT id, option_text FROM options
-        """)
-        options = {option[0]: option[1] for option in cursor_survey.fetchall()}
+        # Получаем все варианты ответа
+        cursor.execute("SELECT id, option_text FROM options")
+        options = {option[0]: option[1] for option in cursor.fetchall()}
 
-    # Подключение к базе данных responses.db для ответов и рекомендаций
-    with sqlite3.connect("survey.db") as conn_responses:
-        cursor_responses = conn_responses.cursor()
-        # Запрос для получения всех ответов и рекомендаций для указанной сессии
-        cursor_responses.execute("""
+        # Получаем ответы с рисками для указанной сессии
+        cursor.execute("""
         SELECT r.risk_type, r.recomendations, r.article, r.link, r.id_question, r.id_option 
         FROM responses r
-        WHERE r.session_id = ?
+        WHERE r.session_id = ? AND r.risk_type IS NOT NULL AND r.risk_type != ''
         """, (session_id,))
-        responses = cursor_responses.fetchall()
+        responses = cursor.fetchall()
 
-    # Структура для хранения статистики
+    # Инициализация структуры результатов
+    risk_types = ["significant", "high", "medium", "low"]
     result = {
         "total_risks": 0,
-        "by_risk_type": {
-            "significant": {"count": 0, "recomendations": [], "article": [], "link": [], "details": []},
-            "high": {"count": 0, "recomendations": [], "article": [], "link": [], "details": []}, 
-            "medium": {"count": 0, "recomendations": [], "article": [], "link": [], "details": []},
-            "low": {"count": 0, "recomendations": [], "article": [], "link": [], "details": []}
-        },
+        "by_risk_type": {rt: {
+            "count": 0,
+            "recomendations": [],
+            "article": [],
+            "link": [],
+            "details": []
+        } for rt in risk_types},
         "by_category": {}
     }
 
-    # Обработка данных
-    for risk_type, recomendations, article, link, question_id, option_id in responses:
-        question = questions.get(question_id)
-        if not question:
+    # Обработка ответов
+    for risk_type, recs, article, link, q_id, opt_id in responses:
+        # Проверяем, что тип риска допустимый
+        if risk_type not in risk_types:
             continue
-            
-        question_text = question["text"]
-        category = question["categ"] or "Без категории"
-        option_text = options.get(option_id, "Неизвестный вариант")
-        
-        # Обновляем общее количество рисков
+
+        question = questions.get(q_id, {})
+        option_text = options.get(opt_id, "Неизвестный вариант")
+        category = question.get("categ", "Без категории")
+
+        # Подготовка данных
+        rec_list = [r.strip() for r in recs.split(",")] if recs else []
+        article_list = [a.strip() for a in article.split(",")] if article else []
+        link_list = [l.strip() for l in link.split(",")] if link else []
+
+        # Обновляем общую статистику
         result["total_risks"] += 1
-        
-        # Обновляем статистику по типам рисков
-        if risk_type in result["by_risk_type"]:
-            result["by_risk_type"][risk_type]["count"] += 1
-            result["by_risk_type"][risk_type]["recomendations"].extend(recomendations.split(","))
-            result["by_risk_type"][risk_type]["article"].extend(article.split(","))
-            result["by_risk_type"][risk_type]["link"].extend(link.split(","))
-            result["by_risk_type"][risk_type]["details"].append({
-                "question": question_text,
-                "answer": option_text,
-                "recomendations": recomendations.split(","),
-                "article": article.split(","),
-                "link": link.split(",")
-            })
-        
-        # Обновляем статистику по категориям
+
+        # Обновляем статистику по типу риска
+        risk_stats = result["by_risk_type"][risk_type]
+        risk_stats["count"] += 1
+        risk_stats["recomendations"].extend(rec_list)
+        risk_stats["article"].extend(article_list)
+        risk_stats["link"].extend(link_list)
+        risk_stats["details"].append({
+            "question": question.get("text", "Неизвестный вопрос"),
+            "answer": option_text,
+            "recomendations": rec_list,
+            "article": article_list,
+            "link": link_list
+        })
+
+        # Обновляем статистику по категории
         if category not in result["by_category"]:
             result["by_category"][category] = {
                 "total": 0,
-                "significant": 0,
-                "high": 0,
-                "medium": 0,
-                "low": 0
+                **{rt: 0 for rt in risk_types}
             }
         
         result["by_category"][category]["total"] += 1
-        if risk_type in result["by_category"][category]:
-            result["by_category"][category][risk_type] += 1
+        result["by_category"][category][risk_type] += 1
+
+    # Удаляем дубликаты в рекомендациях, статьях и ссылках
+    for rt in risk_types:
+        risk_stats = result["by_risk_type"][rt]
+        risk_stats["recomendations"] = list(dict.fromkeys(risk_stats["recomendations"]))
+        risk_stats["article"] = list(dict.fromkeys(risk_stats["article"]))
+        risk_stats["link"] = list(dict.fromkeys(risk_stats["link"]))
 
     return result
 
