@@ -19,6 +19,7 @@ def get_questions():
             "type": q[2],
             "required": bool(q[3]),
             "is_conditional": bool(q[4]),  # Преобразуем в boolean
+            "categ": q[5],
             "options": [{"id": opt[0], "text": opt[1], "next_question": opt[2], "risk_type": opt[3], "recomendations": opt[4], "article": opt[5], "link": opt[6]} for opt in options]
         })
     

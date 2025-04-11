@@ -681,3 +681,31 @@ table {
     margin: 0;
     padding: 20px;
 }
+
+/*Обязательные вопросы*/
+
+        .required-marker {
+            color: red;
+            margin-left: 4px;
+        }
+        
+        .error-message {
+            color: red;
+            text-align: center;
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #ffeeee;
+            border: 1px solid #ffcccc;
+            border-radius: 4px;
+        }
+        
+        .survey-question.unanswered {
+            background-color: #ffeeee;
+            border-left: 3px solid red;
+            padding-left: 10px;
+        }
+        
+        .option {
+            margin: 8px 0;
+        }
+   

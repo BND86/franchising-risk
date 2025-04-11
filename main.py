@@ -173,7 +173,8 @@ async def submit_survey(request: Request,
     # Обработка данных формы
     for key, value in form_data.items():
         if "_" in key:  # id вопроса и id ответа
-            question_id, option_id = map(int, key.split("_"))
+            #question_id, option_id = map(int, key.split("_"))
+            question_id, option_id = map(lambda x: int(x.lstrip('q')), key.split("_"))
             risk_type, recomendations, article, link = value.split("|")
             await repo.save_response(session_id, question_id, option_id, risk_type, recomendations, article, link)  # Асинхронная запись
     
