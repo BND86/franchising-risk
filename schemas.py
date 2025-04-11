@@ -17,4 +17,5 @@ class Questions(BaseModel):
     type: str
     required: bool
     is_conditional: bool
+    categ: str
     options: list[Options]

@@ -709,3 +709,10 @@ table {
             margin: 8px 0;
         }
    
+        .category-header {
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #ddd;
+            color: #333;
+        }

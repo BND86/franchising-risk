@@ -24,54 +24,47 @@
 <div class="content-wrapper">
     <h1>Опрос по договорной стороне</h1>
     <form id="survey-form" action="/submit" method="post">
+        {# Сначала группируем вопросы по категориям #}
+        {% set grouped_questions = {} %}
         {% for question in questions %}
-            <div class="survey-question"
-                 id="question-{{ question.id }}"
-                 data-id="{{ question.id }}"
-                 data-required="{{ 'true' if question.required else 'false' }}"
-                 data-conditional="{{ 'true' if question.is_conditional else 'false' }}"
-                 style="{{ 'display: none;' if question.is_conditional else '' }}">
-                
-                {% set category = "" %}
-                {% if question.id >= 1 and question.id <= 3 %}
-                    {% set category = "Деловая репутация франчайзера" %}
-                {% elif question.id >= 4 and question.id <= 6 %}
-                    {% set category = "Передача прав на бренд" %}
-                {% elif question.id >= 7 and question.id <= 8 %}
-                    {% set category = "Конкурентные ограничения" %}
-                {% elif question.id >= 9 and question.id <= 12 %}
-                    {% set category = "Территориальные ограничения" %}
-                {% elif question.id >= 13 and question.id <= 17 %}
-                    {% set category = "Финансовые условия" %}
-                {% elif question.id >= 18 and question.id <= 23 %}
-                    {% set category = "Продукция и реклама" %}
-                {% elif question.id >= 24 and question.id <= 30 %}
-                    {% set category = "Организация бизнеса" %}
-                {% elif question.id >= 31 and question.id <= 32 %}
-                    {% set category = "Субконцессия" %}
-                {% elif question.id >= 33 and question.id <= 35 %}
-                    {% set category = "Ответственность Сторон" %}
-                {% elif question.id >= 36 and question.id <= 39 %}
-                    {% set category = "Прекращение договора" %}
-                {% endif %}
+            {% if question.categ not in grouped_questions %}
+                {% set _ = grouped_questions.update({question.categ: []}) %}
+            {% endif %}
+            {% set _ = grouped_questions[question.categ].append(question) %}
+        {% endfor %}
 
-                <p class="category"><strong>Категория:</strong> {{ category }}</p>
-                
-                <p>{{ question.text }}{% if question.required %} <span class="required-marker">*</span>{% endif %}</p>
-                <div class="survey-options">
-                    {% for option in question.options %}
-                        <div class="option">
-                            <input type="radio" 
-                                id="q{{ question.id }}_{{ option.id }}"
-                                name="q{{ question.id }}_{{ option.id }}"
-                                value="{{ option.risk_type }}|{{ option.recomendations }}|{{ option.article }}|{{ option.link }}"
-                                data-next="{{ option.next_question or '' }}">
-                            <label for="q{{ question.id }}_{{ option.id }}">
-                                {{ option.text }}
-                            </label>
-                        </div>
-                    {% endfor %}
+        {# Теперь выводим категории и вопросы #}
+        {% for category, questions_in_category in grouped_questions.items() %}
+            <div class="category-group">
+                <div class="category-header">
+                    <h2>{{ category }}</h2>
                 </div>
+                
+                {% for question in questions_in_category %}
+                    <div class="survey-question"
+                         id="question-{{ question.id }}"
+                         data-id="{{ question.id }}"
+                         data-required="{{ 'true' if question.required else 'false' }}"
+                         data-conditional="{{ 'true' if question.is_conditional else 'false' }}"
+                         style="{{ 'display: none;' if question.is_conditional else '' }}">
+                        
+                        <p>{{ question.text }}{% if question.required %} <span class="required-marker">*</span>{% endif %}</p>
+                        <div class="survey-options">
+                            {% for option in question.options %}
+                                <div class="option">
+                                    <input type="radio" 
+                                        id="q{{ question.id }}_{{ option.id }}"
+                                        name="q{{ question.id }}_{{ option.id }}"
+                                        value="{{ option.risk_type }}|{{ option.recomendations }}|{{ option.article }}|{{ option.link }}"
+                                        data-next="{{ option.next_question or '' }}">
+                                    <label for="q{{ question.id }}_{{ option.id }}">
+                                        {{ option.text }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
         {% endfor %}
         
