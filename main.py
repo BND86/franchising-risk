@@ -9,6 +9,7 @@ from fastapi.responses import RedirectResponse, FileResponse
 
 from repo import Repository
 from dependencies import get_user_repo
+from make_pdf import make_pdf
 
 
 app = FastAPI()
@@ -139,8 +140,6 @@ def index(request: Request, session_id: str = Query(None, description="Session I
         return templates.TemplateResponse("stats.html", {"request": request, "stats": None, "session_id": None, "risk_translations": RISK_TRANSLATIONS})
     
     stats = get_risk_statistics(session_id)
-    with open("data.json", "w", encoding="utf-8") as f:
-        json.dump(stats, f, indent=4, ensure_ascii=False)
     return templates.TemplateResponse("stats.html", {"request": request, "stats": stats, "session_id": session_id, "risk_translations": RISK_TRANSLATIONS})
 
 @app.post("/submit")
@@ -158,7 +157,9 @@ async def submit_survey(request: Request,
     # После обработки данных перенаправляем пользователя на страницу /stats.html
     return RedirectResponse(url=f"/stats.html?session_id={session_id}", status_code=303)
 
-# @app.get("/stats/download")
-# async def download(response_class=FileResponse,
-#                    file = Depends(page_to_pdf)):
-    
+@app.get("/stats/download")
+async def download(response_class=FileResponse,
+                   session_id: str = Query(None, description="Session ID to filter responses")):
+    stats = get_risk_statistics(session_id)
+    file_path = make_pdf(stats)
+    return FileResponse(path=file_path, filename="risk_report.pdf", media_type='application/pdf')
