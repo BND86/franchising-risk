@@ -7,7 +7,7 @@ from uuid import uuid4
 from fastapi.responses import RedirectResponse
 
 from repo import Repository
-from dependencies import get_user_repo
+from dependencies import get_user_repo, get_owner_repo
 
 from typing import Optional
 from pydantic import BaseModel
