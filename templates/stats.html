@@ -99,14 +99,11 @@
                                         {% endfor %}
                                     </p>
                                     {% if detail.article and detail.article[0] != 'None' and detail.link %}
-                                        <p><strong>Дополнительно:</strong> 
-                                            <a href="{{ detail.link }}" target="_blank" rel="noopener noreferrer">
-                                                {{ detail.article[0] }}
-                                            </a>
-                                        </p>
+                                        <a href="{{ detail.link|replace('[', '',)|replace(']', '')|replace("'", "") }}" target="_blank" rel="noopener noreferrer">
+                                            {{ detail.article[0] }}
+                                        </a>
                                     {% endif %}
                                 </div>
-                                
                                 {% endif %}
                             </div>
                             {% endfor %}
