@@ -104,18 +104,21 @@ nav {
     font-weight: 600;
     cursor: pointer;
     transition: var(--transition);
+    text-decoration: none;
 }
 
 .nav-button:hover {
     background-color: var(--accent-color);
     color: white;
     transform: translateY(-2px);
+    text-decoration: none;
 }
 
 .nav-button.active {
     background-color: var(--secondary-color);
     color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
 }
 
 .title-box {
