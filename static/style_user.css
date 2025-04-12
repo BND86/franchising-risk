@@ -82,18 +82,21 @@ nav {
     font-weight: 600;
     cursor: pointer;
     transition: var(--transition);
+    text-decoration: none;
 }
 
 .nav-button:hover {
     background-color: var(--accent-color);
     color: white;
     transform: translateY(-2px);
+    text-decoration: none;
 }
 
 .nav-button.active {
     background-color: var(--secondary-color);
     color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
 }
 
 .title-box {
@@ -330,6 +333,7 @@ blockquote {
     max-width: 900px;
     margin: 0 auto;
     padding: 0 20px;
+    text-decoration: none;
 }
 
 .analysis-card {
@@ -350,12 +354,14 @@ blockquote {
     transform: translateY(-5px);
     box-shadow: 0 10px 30px rgba(67, 97, 238, 0.15);
     border-color: rgba(67, 97, 238, 0.3);
+    text-decoration: none;
 }
 
 .card-icon {
     font-size: 2.5rem;
     margin-bottom: 15px;
     color: var(--primary);
+    text-decoration: none;
 }
 
 .card-title {
@@ -363,12 +369,14 @@ blockquote {
     color: var(--primary-dark);
     margin-bottom: 10px;
     font-weight: 600;
+    text-decoration: none;
 }
 
 .card-description {
     color: #555;
     line-height: 1.5;
     margin-bottom: 20px;
+    text-decoration: none;
 }
 
 .card-arrow {
@@ -376,11 +384,13 @@ blockquote {
     font-size: 1.5rem;
     text-align: right;
     transition: transform 0.3s ease;
+    text-decoration: none;
 }
 
 .analysis-card:hover .card-arrow {
     transform: translateX(5px);
     color: var(--accent);
+    text-decoration: none;
 }
 
 @media (max-width: 768px) {
