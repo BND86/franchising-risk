@@ -15,7 +15,7 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Tabl
 from reportlab.lib.styles import getSampleStyleSheet
 
 
-def make_pdf(data) -> str:
+def make_pdf(data: dict, session_id: str) -> str:
     # Настройка шрифта
     pdfmetrics.registerFont(TTFont("TimesNewRoman", "times.ttf"))
     pdfmetrics.registerFont(TTFont("TimesNewRoman-Bold", "timesbd.ttf"))
@@ -60,14 +60,14 @@ def make_pdf(data) -> str:
     plt.pie(risk_type_df["Количество"],
             colors=['#e74c3c', '#e67e22', '#f1c40f', '#2ecc71'], startangle=140)
     plt.legend(labels=risk_type_df["Тип риска"], title="Тип риска", loc="center left", bbox_to_anchor=(1, 0.5))
-    plt.savefig(img_dir / "risk_pie.png", bbox_inches="tight")
+    plt.savefig(img_dir / f"risk_pie_{session_id}.png", bbox_inches="tight")
     plt.close()
 
     category_totals = {k: v["total"] for k, v in data["by_category"].items()}
     plt.figure(figsize=(6, 6))
     plt.pie(category_totals.values(), startangle=140)
     plt.legend(labels=category_totals.keys(), title="Категория риска", loc="center left", bbox_to_anchor=(1, 0.5))
-    plt.savefig(img_dir / "category_pie.png", bbox_inches="tight")
+    plt.savefig(img_dir / f"category_pie_{session_id}.png", bbox_inches="tight")
     plt.close()
 
     category_df = pd.DataFrame(data["by_category"]).T[["low", "medium", "high"]]
@@ -94,10 +94,10 @@ def make_pdf(data) -> str:
     plt.legend(["Низкий", "Средний", "Высокий"], title="Уровень риска", fontsize=10, title_fontsize=11)
 
     plt.tight_layout()
-    plt.savefig(img_dir / "category_bar.png")
+    plt.savefig(img_dir / f"category_bar_{session_id}.png")
     plt.close()
     # Генерация PDF
-    pdf_path = report_dir / "risk_report.pdf"
+    pdf_path = report_dir / f"risk_report_{session_id}.pdf"
     doc = SimpleDocTemplate(pdf_path.as_posix(), pagesize=A4,
                             rightMargin=2*cm, leftMargin=2*cm,
                             topMargin=2*cm, bottomMargin=2*cm)
@@ -131,7 +131,7 @@ def make_pdf(data) -> str:
 
     # 1 Страница (таблица и piechart)
     elements.append(Spacer(1, 0.3 * cm))
-    img = Image(str(img_dir / "risk_pie.png"))
+    img = Image(str(img_dir / f"risk_pie_{session_id}.png"))
     img._restrictSize(14 * cm, 10 * cm)
     elements.append(img)
     elements.append(Spacer(1, 1 * cm))
@@ -139,8 +139,8 @@ def make_pdf(data) -> str:
 
     # Остальные графики
     charts = [
-        ("Распределение по категориям", img_dir / "category_pie.png"),
-        ("Распределение рисков по категориям (без существенных рисков)", img_dir / "category_bar.png"),
+        ("Распределение по категориям", img_dir / f"category_pie_{session_id}.png"),
+        ("Распределение рисков по категориям (без существенных рисков)", img_dir / f"category_bar_{session_id}.png"),
     ]
 
     for title, path in charts:
@@ -200,16 +200,11 @@ def make_pdf(data) -> str:
     doc.build(elements)
 
     # Удаление временных файлов
-    for filename in ["category_bar.png", "category_pie.png", "risk_pie.png"]:
+    for filename in [f"category_bar_{session_id}.png", f"category_pie_{session_id}.png", f"risk_pie_{session_id}.png"]:
         file_path = img_dir / filename
         try:
             file_path.unlink()
         except Exception as e:
             print(f"Deleting file {file_path}. An error occurred: {e}")
-    
+    print(pdf_path.as_posix())
     return pdf_path.as_posix()
-
-with open("data.json", encoding="utf-8") as f:
-    data = json.load(f)
-
-print(make_pdf(data))

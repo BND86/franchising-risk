@@ -112,6 +112,9 @@
                     {% endfor %}
                 </div>
             </div>
+            <a href="/download/?session_id={{ session_id }}" download>
+                <button>СКАЧАТЬ ОТЧЁТ</button>
+            </a>
             {% elif session_id %}
             <div class="no-data-box">
                 <p>Нет данных для session_id: <b>{{ session_id }}</b></p>
