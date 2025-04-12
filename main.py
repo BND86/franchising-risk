@@ -1,4 +1,5 @@
 import sqlite3
+import json
 from fastapi import FastAPI, Form, Request, Query, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
@@ -259,6 +260,8 @@ def index(request: Request, session_id: str = Query(None, description="Session I
         return templates.TemplateResponse("stats.html", {"request": request, "stats": None, "session_id": None, "risk_translations": RISK_TRANSLATIONS})
     
     stats = get_risk_statistics(session_id)
+    with open("data.json", "w+", encoding="utf-8") as f:
+        json.dump(stats, f, ensure_ascii=False, indent=4)
     return templates.TemplateResponse("stats.html", {"request": request, "stats": stats, "session_id": session_id, "risk_translations": RISK_TRANSLATIONS})
 
 @app.get("/stats_owner.html")
