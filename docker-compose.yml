@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: franchising-risk
+    ports:
+      - "8000:8000"
+    restart: always

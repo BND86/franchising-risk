@@ -6,17 +6,18 @@ from fastapi.templating import Jinja2Templates
 from uuid import uuid4
 from fastapi.responses import RedirectResponse
 
-from repo import Repository
-from dependencies import get_user_repo, get_owner_repo
+from app.db.repo import Repository
+from app.db.db import OWNER_DB, SURVEY_DB
+from app.routes.dependencies import get_user_repo, get_owner_repo
 
 from typing import Optional
 from pydantic import BaseModel
-from calculator import calculate_results
+from app.services.calculator import calculate_results
 
 
 app = FastAPI()
-app.mount("/static", StaticFiles(directory="static", html=True), name="static")
-templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="app/static", html=True), name="static")
+templates = Jinja2Templates(directory="app/templates")
 
 class InputData(BaseModel):
     # Финансы
@@ -47,7 +48,7 @@ RISK_TRANSLATIONS = {
 
 def get_risk_statistics(session_id: str):
     # Подключение к базе данных survey.db для вопросов и вариантов ответов
-    with sqlite3.connect("survey.db") as conn:
+    with sqlite3.connect(SURVEY_DB) as conn:
         cursor = conn.cursor()
         
         # Получаем все вопросы с категориями
@@ -191,5 +192,5 @@ async def economic_page(request: Request):
 
 @app.post("/result")
 async def result_page(request: Request, input_data: InputData = Form(...)):
-    results = calculate_results(input_data.dict())
+    results = calculate_results(input_data.model_dump())
     return templates.TemplateResponse("result_econom.html", {"request": request, "results": results})

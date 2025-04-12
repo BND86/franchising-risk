@@ -1,8 +1,8 @@
 import aiosqlite
 
 
-SURVEY_DB = "survey.db"
-OWNER_DB = "owner.db"
+SURVEY_DB = "app/db/survey.db"
+OWNER_DB = "app/db/owner.db"
 # функции выдают подключение и закрываеют его, когда перестают использоваться
 async def get_survey_db():
     conn = await aiosqlite.connect(SURVEY_DB)

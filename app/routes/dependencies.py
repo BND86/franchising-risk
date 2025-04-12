@@ -1,8 +1,8 @@
 import aiosqlite
 from fastapi import Depends
 
-from db import get_survey_db, get_owner_db
-from repo import UserRepository, OwnerRepository,  Repository
+from app.db.db import get_survey_db, get_owner_db
+from app.db.repo import UserRepository, OwnerRepository,  Repository
 
 
 # эта функция внедряется в эндпоинт через Depends

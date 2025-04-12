@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 import aiosqlite
 import aiofiles
 
-from schemas import Questions, Options
+from app.schemas.schemas import Questions, Options
 
 
 class Repository(ABC): # интерфейс для опросника
@@ -66,7 +66,7 @@ class OwnerRepository(Repository): # для правообладателя
         
         # временно переделал в асинхронную запись, это как правило дольше, но для маленького файла норм
         # потом можно будет вынести в BackgroundTasks синхронную функцию
-        async with aiofiles.open("responses.txt", "a") as f:
+        async with aiofiles.open("app/db/responses.txt", "a") as f:
             await f.write(f"{session_id}, {question_id}, {option_id}, {risk_type}, {recomendations}, {article}, {link}\n")
 
 class UserRepository(Repository): # для франчайзи
@@ -114,12 +114,11 @@ class UserRepository(Repository): # для франчайзи
                 link TEXT
             )
         ''')
-        
+
         await cursor.execute("INSERT INTO responses (session_id, id_question, id_option, risk_type, recomendations, article, link) VALUES (?, ?, ?, ?, ?, ?, ?)",
                     (session_id, question_id, option_id, risk_type, recomendations, article, link))
         await self.survey_db.commit()
-        
         # временно переделал в асинхронную запись, это как правило дольше, но для маленького файла норм
         # потом можно будет вынести в BackgroundTasks синхронную функцию
-        async with aiofiles.open("responses.txt", "a") as f:
+        async with aiofiles.open("app/db/responses.txt", "a") as f:
             await f.write(f"{session_id}, {question_id}, {option_id}, {risk_type}, {recomendations}, {article}, {link}\n")

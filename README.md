@@ -30,21 +30,54 @@ fastapi dev main.py
 ## 📂 Структура проекта
 
 ```
-survey_app/
-├── main.py          # Основной файл FastAPI
-├── templates/       # HTML-шаблоны
-├── static/          # Статические файлы:
-│   └── script.js    # Основной JavaScript-файл
-├── database.py      # Синхронный код для работы с БД
-├── db.py            # Подключение к БД
-├── dependencies.py  # Зависимости для эндпоинтов
-├── repo.py          # Асинхронный код для работы с БД
-├── schemas.py       # Модели Pydantic для данных
-├── requirements.txt # Список зависимостей проекта
-├── responses.txt    # Файл для сохранения ответов в текстовом формате
-├── responses.db     # База данных для хранения ответов (создается автоматически)
-├── survey.db        # База данных с вопросами
-└── README.md        # Этот файл
+app/
+│   main.py
+│   __init__.py
+│
+├───db
+│       database.py
+│       db.py
+│       owner.db
+│       repo.py
+│       responses.txt
+│       survey.db
+│       survey_old.db
+│       __init__.py
+│
+├───routes
+│       dependencies.py
+│       __init__.py
+│
+├───schemas
+│       schemas.py
+│       __init__.py
+│
+├───services
+│       calculator.py
+│       __init__.py
+│
+├───static
+│       Picture1.jpg
+│       Picture2.jpg
+│       Picture3.jpg
+│       Picture4.jpg
+│       script.js
+│       style.css
+│       style_gloss.css
+│       style_menu.css
+│       style_stats.css
+│       style_user.css
+│
+├───templates
+│       contract.html
+│       economic.html
+│       glossary.html
+│       index.html
+│       owner.html
+│       result_econom.html
+│       stats.html
+│       survey1.html
+│       user.html
 ```
 
 ## 📝 Дополнительная информация
