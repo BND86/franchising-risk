@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Статистика рисков</title>
+    <link rel="stylesheet" href="/static/style_stats.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <header>
+        <div class="title-box">
+            ПроФраншиза
+        </div>
+
+        <nav>
+            <a class="nav-button" href="/">Меню</a>
+            <a class="nav-button" href="/user">Пользователь</a>
+            <a class="nav-button" href="/owner">Правообладатель</a>
+            <a class="nav-button" href="/glossary">Глоссарий</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="content-section">
+            <h2>Статистика рисков</h2>
+
+            {% if stats %}
+            <div class="dashboard-grid">
+                <!-- Первая строка: таблица и круговая диаграмма -->
+                <div class="dashboard-row">
+                    <div class="risk-table-container">
+                        <table>
+                            <thead>
+                              <tr>
+                                <th>Тип риска</th>
+                                <th>Количество</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {% for key, value in stats.by_risk_type.items() %}
+                              <tr>
+                                <td>{{ risk_translations[key] }}</td>
+                                <td>{{ value.count }}</td>
+                              </tr>
+                              {% endfor %}
+                            </tbody>
+                          </table>
+                    </div>
+
+                    <div class="pie-chart-container">
+                        <div class="chart-box fixed-height">
+                            <h3>Распределение рисков по типам</h3>
+                            <div class="chart-container-wrapper">
+                                <canvas id="risk-pie-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Вторая строка: общее количество рисков -->
+                
+
+                <!-- Третья строка: диаграммы категорий -->
+                <div class="dashboard-row">
+                    <div class="chart-box fixed-height">
+                        <h3>Распределение рисков по категориям</h3>
+                        <div class="chart-container-wrapper">
+                            <canvas id="category-pie-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-box fixed-height">
+                        <h3>Распределение по категориям (без существенных)</h3>
+                        <div class="chart-container-wrapper">
+                            <canvas id="category-bar-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Описание рисков -->
+                <div class="dashboard-row full-width">
+                    <h3>Описание рисков</h3>
+                    
+                    {% for key, value in stats.by_risk_type.items() %}
+                        {% if value.count > 0 %}
+                        <div class="risk-block">
+                            <h4>{{ risk_translations[key] }} ({{ value.count }})</h4>
+                            {% for detail in value.details %}
+                            <div class="risk-detail">
+                                <p class="question">Вопрос: {{ detail.question }}</p>
+                                <p class="answer">Ответ: {{ detail.answer }}</p>
+                                {% if detail.recomendations %}
+                                <div class="recommendation">
+                                    <p>
+                                        {% for rec in detail.recomendations %}
+                                            {{ rec }}{% if not loop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </p>
+                                    {% if detail.article and detail.article[0] != 'None' and detail.link %}
+                                        <a href="{{ detail.link|replace('[', '',)|replace(']', '')|replace("'", "") }}" target="_blank" rel="noopener noreferrer">
+                                            {{ detail.article[0] }}
+                                        </a>
+                                    {% endif %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% elif session_id %}
+            <div class="no-data-box">
+                <p>Нет данных для session_id: <b>{{ session_id }}</b></p>
+            </div>
+            {% else %}
+            <div class="no-data-box">
+                <p>Session ID не был передан.</p>
+            </div>
+            {% endif %}
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-box">
+            Сделано в 2025 году | Подготовила проект Команда 3
+        </div>
+    </footer>
+
+    <script>
+        // Скрипты для диаграмм остаются без изменений
+        const riskStats = {
+            "significant": {{ stats.by_risk_type['significant'].count }},
+            "high": {{ stats.by_risk_type['high'].count }},
+            "medium": {{ stats.by_risk_type['medium'].count }},
+            "low": {{ stats.by_risk_type['low'].count }}
+        };
+
+        const ctxRisk = document.getElementById('risk-pie-chart').getContext('2d');
+        const riskPieChart = new Chart(ctxRisk, {
+            type: 'pie',
+            data: {
+                labels: ['Существенный риск', 'Высокий риск', 'Средний риск', 'Незначительный риск'],
+                datasets: [{
+                    data: [riskStats.significant, riskStats.high, riskStats.medium, riskStats.low],
+                    backgroundColor: ['#e74c3c', '#e67e22', '#f1c40f', '#2ecc71'],
+                    borderColor: ['#c0392b', '#d35400', '#f39c12', '#27ae60'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.raw || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = Math.round((value / total) * 100);
+                                return `${label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        const categoryLabels = {{ stats.by_category.keys()|list|tojson }};
+        const categoryData = {{ stats.by_category.values()|map(attribute='total')|list|tojson }};
+
+        const ctxCategory = document.getElementById('category-pie-chart').getContext('2d');
+        const categoryPieChart = new Chart(ctxCategory, {
+            type: 'pie',
+            data: {
+                labels: categoryLabels,
+                datasets: [{
+                    data: categoryData,
+                    backgroundColor: [
+                        '#e74c3c', '#3498db', '#2ecc71', '#f1c40f',
+                        '#9b59b6', '#1abc9c', '#e67e22', '#34495e'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.raw || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = Math.round((value / total) * 100);
+                                return `${label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        const categoryLabelsBar = {{ stats.by_category.keys()|list|tojson }};
+        const lowData = {{ stats.by_category.values()|map(attribute='low')|list|tojson }};
+        const mediumData = {{ stats.by_category.values()|map(attribute='medium')|list|tojson }};
+        const highData = {{ stats.by_category.values()|map(attribute='high')|list|tojson }};
+
+        const ctxBar = document.getElementById('category-bar-chart').getContext('2d');
+        const categoryBarChart = new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: categoryLabelsBar,
+                datasets: [
+                    {
+                        label: 'Низкий риск',
+                        data: lowData,
+                        backgroundColor: '#2ecc71',
+                        borderColor: '#27ae60',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Средний риск',
+                        data: mediumData,
+                        backgroundColor: '#f1c40f',
+                        borderColor: '#f39c12',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Высокий риск',
+                        data: highData,
+                        backgroundColor: '#e67e22',
+                        borderColor: '#d35400',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        stacked: false,
+                        title: {
+                            display: true,
+                            text: 'Категории'
+                        }
+                    },
+                    y: {
+                        stacked: false,
+                        title: {
+                            display: true,
+                            text: 'Количество рисков'
+                        },
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.raw;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -68,19 +68,27 @@ nav {
     background-color: var(--light-color);
     border: none;
     color: var(--primary-color);
-    padding: 8px 16px;
+    padding: 10px 20px;
     border-radius: 50px;
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     transition: var(--transition);
-    white-space: nowrap;
+    text-decoration: none;
 }
 
 .nav-button:hover {
     background-color: var(--accent-color);
     color: white;
     transform: translateY(-2px);
+    text-decoration: none;
+}
+
+.nav-button.active {
+    background-color: var(--secondary-color);
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
 }
 
 main {
@@ -152,7 +160,7 @@ thead {
 }
 
 th {
-    background: #2e2b37;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
     color: white;
     font-weight: 600;
     text-transform: uppercase;
