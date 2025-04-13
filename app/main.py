@@ -1,15 +1,15 @@
 import sqlite3
-import json
 from fastapi import FastAPI, Form, Request, Query, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from uuid import uuid4
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, FileResponse
 
 from app.db.repo import Repository
 from app.db.db import OWNER_DB, SURVEY_DB
 from app.routes.dependencies import get_user_repo, get_owner_repo
+from make_pdf import make_pdf
 
 from typing import Optional
 from pydantic import BaseModel
@@ -261,8 +261,6 @@ def index(request: Request, session_id: str = Query(None, description="Session I
         return templates.TemplateResponse("stats.html", {"request": request, "stats": None, "session_id": None, "risk_translations": RISK_TRANSLATIONS})
     
     stats = get_risk_statistics(session_id)
-    with open("data.json", "w+", encoding="utf-8") as f:
-        json.dump(stats, f, ensure_ascii=False, indent=4)
     return templates.TemplateResponse("stats.html", {"request": request, "stats": stats, "session_id": session_id, "risk_translations": RISK_TRANSLATIONS})
 
 @app.get("/stats_owner.html")
@@ -313,3 +311,10 @@ async def economic_page(request: Request):
 async def result_page(request: Request, input_data: InputData = Form(...)):
     results = calculate_results(input_data.model_dump())
     return templates.TemplateResponse("result_econom.html", {"request": request, "results": results})
+
+@app.get("/download/")
+async def download(response_class=FileResponse,
+                   session_id: str = Query(None, description="Session ID to filter responses")):
+    stats = get_risk_statistics(session_id)
+    file_path = make_pdf(stats, session_id)
+    return FileResponse(path=file_path, filename="risk_report.pdf", media_type='application/pdf')
