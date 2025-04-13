@@ -113,7 +113,7 @@
                 </div>
             </div>
             <a href="/download/?session_id={{ session_id }}" download>
-                <button>СКАЧАТЬ ОТЧЁТ</button>
+                <button class="button-style">СКАЧАТЬ ОТЧЁТ</button>
             </a>
             {% elif session_id %}
             <div class="no-data-box">
@@ -187,9 +187,19 @@
                 datasets: [{
                     data: categoryData,
                     backgroundColor: [
-                        '#e74c3c', '#3498db', '#2ecc71', '#f1c40f',
-                        '#9b59b6', '#1abc9c', '#e67e22', '#34495e'
-                    ],
+    '#9b59b6',  // фиолетовый  
+    '#3498db',  // синий  
+    '#1abc9c',  // бирюзовый  
+    '#34495e',  // темно-серо-синий  
+    '#e84393',  // розовый  
+    '#00b894',  // мятный  
+    '#6c5ce7',  // лавандовый  
+    '#fd79a8',  // пастельно-розовый  
+    '#a29bfe',  // светло-фиолетовый  
+    '#55efc4'   // аквамарин  
+],
+                    
+
                     borderWidth: 1
                 }]
             },

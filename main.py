@@ -273,18 +273,25 @@ def index(request: Request, session_id: str = Query(None, description="Session I
 
 @app.post("/submit")
 async def submit_survey(request: Request,
-                        repo: Repository = Depends(get_user_repo)):
+                       repo: Repository = Depends(get_user_repo)):
     form_data = await request.form()
-    session_id = get_session_id(request)  # Идентификатор сессии пользователя    
+    session_id = get_session_id(request)
+    
+    print("\n=== Received form submission ===")
+    print(f"Session ID: {session_id}")
+    print("Form data:")
+    for key, value in form_data.items():
+        print(f"  {key}: {value}")
+    
     # Обработка данных формы
     for key, value in form_data.items():
-        if "_" in key:  # id вопроса и id ответа
-            #question_id, option_id = map(int, key.split("_"))
-            question_id, option_id = map(lambda x: int(x.lstrip('q')), key.split("_"))
-            risk_type, recomendations, article, link = value.split("|")
-            await repo.save_response(session_id, question_id, option_id, risk_type, recomendations, article, link)  # Асинхронная запись
-    
-    # После обработки данных перенаправляем пользователя на страницу /stats.html
+        if key.startswith('q'):  
+            question_id = int(key[1:])
+            option_id, risk_type, recomendations, article, link = value.split("|")
+            print(f"Processing question {question_id}, option {option_id}")
+            await repo.save_response(session_id, question_id, option_id, risk_type, recomendations, article, link)
+
+    print("=== Form processing completed ===")
     return RedirectResponse(url=f"/stats.html?session_id={session_id}", status_code=303)
 
 @app.post("/submit_owner")
@@ -317,3 +324,12 @@ async def download(response_class=FileResponse,
     stats = get_risk_statistics(session_id)
     file_path = make_pdf(stats, session_id)
     return FileResponse(path=file_path, filename="risk_report.pdf", media_type='application/pdf')
+
+
+@app.post("/test-submit")
+async def test_submit(request: Request):
+    form_data = await request.form()
+    print("\n=== Received form data ===")
+    for key, value in form_data.items():
+        print(f"{key}: {value}")
+    return {"status": "success"}
