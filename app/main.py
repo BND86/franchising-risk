@@ -136,7 +136,7 @@ def get_risk_statistics(session_id: str):
 
 def get_risk_statistics_owner(session_id: str):
     # Подключение к базе данных owner.db для вопросов и вариантов ответов
-    with sqlite3.connect("owner.db") as conn:
+    with sqlite3.connect(OWNER_DB) as conn:
         cursor = conn.cursor()
         
         # Получаем все вопросы с категориями
