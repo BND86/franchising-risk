@@ -9,7 +9,7 @@ from fastapi.responses import RedirectResponse, FileResponse
 from app.db.repo import Repository
 from app.db.db import OWNER_DB, SURVEY_DB
 from app.routes.dependencies import get_user_repo, get_owner_repo
-from make_pdf import make_pdf
+from app.services.make_pdf import make_pdf
 
 from typing import Optional
 from pydantic import BaseModel

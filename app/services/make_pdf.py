@@ -1,4 +1,3 @@
-import json
 import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
@@ -17,8 +16,8 @@ from reportlab.lib.styles import getSampleStyleSheet
 
 def make_pdf(data: dict, session_id: str) -> str:
     # Настройка шрифта
-    pdfmetrics.registerFont(TTFont("TimesNewRoman", "times.ttf"))
-    pdfmetrics.registerFont(TTFont("TimesNewRoman-Bold", "timesbd.ttf"))
+    pdfmetrics.registerFont(TTFont("TimesNewRoman", "app/fonts/TIMES.TTF"))
+    pdfmetrics.registerFont(TTFont("TimesNewRoman-Bold", "app/fonts/TIMESBD.TTF"))
 
     pdfmetrics.registerFontFamily("TimesNewRoman", normal="TimesNewRoman", bold="TimesNewRoman-Bold")
 
@@ -46,8 +45,8 @@ def make_pdf(data: dict, session_id: str) -> str:
     # Создание графиков
     plt.style.use('bmh')
 
-    img_dir = Path("pdf_images")
-    report_dir = Path("pdf_reports")
+    img_dir = Path("app/temp/pdf_images")
+    report_dir = Path("app/temp/pdf_reports")
 
     img_dir.mkdir(exist_ok=True)
     report_dir.mkdir(exist_ok=True)
