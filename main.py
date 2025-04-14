@@ -20,22 +20,20 @@ app.mount("/static", StaticFiles(directory="static", html=True), name="static")
 templates = Jinja2Templates(directory="templates")
 
 class InputData(BaseModel):
-    # Финансы
-    start_investment: float
-    franchise_fee: float
-    royalty_percent: float 
-    payback_period: float
-    monthly_turnover: float
-    
-    # Геоаналитика
-    pedestrian_traffic: float 
-    car_traffic: float
-    competitors_count: float
-    search_queries: float
-    
-    # Дополнительные данные
-    operational_expenses: float
-    additional_payments: float
+    start_investment: float = 1_300_000
+    franchise_fee: float = 350_000
+    royalty_percent: float = 2
+    payback_period: float = 12
+    monthly_turnover: float = 900_000
+
+    pedestrian_traffic: float = 190_000
+    car_traffic: float = 90_000
+    competitors_count: float = 447
+    search_queries: float = 1_135_000
+
+    operational_expenses: float = 50
+    additional_payments: float = 10
+
 
 
 # Словарь для перевода типов рисков на русский язык
@@ -322,7 +320,33 @@ async def economic_page(request: Request):
     return templates.TemplateResponse("economic.html", {"request": request})
 
 @app.post("/result")
-async def result_page(request: Request, input_data: InputData = Form(...)):
+async def result_page(
+    request: Request,
+    start_investment: float = Form(default=1_300_000),
+    franchise_fee: float = Form(default=350_000),
+    royalty_percent: float = Form(default=2),
+    payback_period: float = Form(default=12),
+    monthly_turnover: float = Form(default=900_000),
+    pedestrian_traffic: float = Form(default=190_000),
+    car_traffic: float = Form(default=90_000),
+    competitors_count: float = Form(default=447),
+    search_queries: float = Form(default=1_135_000),
+    operational_expenses: float = Form(default=50),
+    additional_payments: float = Form(default=10),
+):
+    input_data = InputData(
+        start_investment=start_investment,
+        franchise_fee=franchise_fee,
+        royalty_percent=royalty_percent,
+        payback_period=payback_period,
+        monthly_turnover=monthly_turnover,
+        pedestrian_traffic=pedestrian_traffic,
+        car_traffic=car_traffic,
+        competitors_count=competitors_count,
+        search_queries=search_queries,
+        operational_expenses=operational_expenses,
+        additional_payments=additional_payments,
+    )
     results = calculate_results(input_data.dict())
     return templates.TemplateResponse("result_econom.html", {"request": request, "results": results})
 

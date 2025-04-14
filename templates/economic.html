@@ -91,22 +91,12 @@
 <main>
     <section class="content-wrapper">
         <h1 class="section-title"><i class="fas fa-chart-line"></i> Экономический анализ франшизы</h1>
-        
-        <div class="form-card">
-            <h2 class="form-section-title"><i class="fas fa-info-circle"></i> Инструкция по сбору геоаналитики</h2>
-            <p>Перед тем как заполнить форму, перейдите на сайт <a href="https://yandex.ru/geoanalytics/platform?layer=searches&category=auto&ll=37.595915%2C55.764536&z=13.65" target="_blank">Яндекс Геоаналитика</a></p>
-            <ol>
-                <li>Выберите категорию бизнеса: рестораны и бары</li>
-                <li>Оцените по карте:
-                    <ul class="mt-2">
-                        <li><strong>Пешеходный трафик</strong> — число в легенде (например: 45 000 чел./день)</li>
-                        <li><strong>Автомобильный трафик</strong> — аналогично (авто/день)</li>
-                        <li><strong>Количество конкурентов</strong> — по точкам на карте в радиусе 500 м</li>
-                        <li><strong>Поисковые запросы</strong> — слой "Поисковые запросы" в Яндекс</li>
-                    </ul>
-                </li>
-                <li>Введите полученные значения в форму ниже</li>
-            </ol>
+        <div class="info-alert">
+            <strong>Важно:</strong> Если у Вас нет представления, о некоторых значениях:
+            <ul class="mt-2 mb-0">
+                <li>Вы можете ввести любые значения для последующего анализа</li>
+                <li>Вы можете оставить форму пустой, тогда инструмент будет использовать средние показатели</li>
+            </ul>
         </div>
         
         <form action="/result" method="post">
@@ -115,33 +105,50 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label for="start_investment" class="form-label">Стартовые инвестиции, руб.</label>
-                        <input type="number" step="1000" min="0" class="form-control" id="start_investment" 
-                               name="start_investment" placeholder="500000" required>
+                        <input type="number" min="0" class="form-control" id="start_investment" 
+                               name="start_investment" placeholder="500000" >
                         <div class="form-hint">Включая оборудование, ремонт и т.д.</div>
                     </div>
                     <div class="col-md-6">
                         <label for="franchise_fee" class="form-label">Паушальный взнос, руб.</label>
-                        <input type="number" step="1000" min="0" class="form-control" id="franchise_fee" 
-                               name="franchise_fee" placeholder="300000" required>
+                        <input type="number" min="0" class="form-control" id="franchise_fee" 
+                               name="franchise_fee" placeholder="300000" >
                     </div>
                     <div class="col-md-6">
                         <label for="royalty_percent" class="form-label">Роялти, %</label>
-                        <input type="number" step="0.1" min="0" max="20" class="form-control" id="royalty_percent" 
-                               name="royalty_percent" placeholder="5.5" required>
+                        <input type="number" min="0" max="20" class="form-control" id="royalty_percent" 
+                               name="royalty_percent" placeholder="5.5" >
                         <div class="form-hint">От ежемесячного оборота</div>
                     </div>
                     <div class="col-md-6">
                         <label for="payback_period" class="form-label">Срок окупаемости, мес.</label>
-                        <input type="number" step="1" min="6" max="60" class="form-control" id="payback_period" 
-                               name="payback_period" placeholder="24" required>
+                        <input type="number" min="6" max="60" class="form-control" id="payback_period" 
+                               name="payback_period" placeholder="24" >
                     </div>
                     <div class="col-md-6">
                         <label for="monthly_turnover" class="form-label">Оборот в месяц, руб.</label>
-                        <input type="number" step="1000" min="0" class="form-control" id="monthly_turnover" 
-                               name="monthly_turnover" placeholder="1200000" required>
+                        <input type="number" min="0" class="form-control" id="monthly_turnover" 
+                               name="monthly_turnover" placeholder="1200000" >
                         <div class="form-hint">Прогнозируемый средний оборот</div>
                     </div>
                 </div>
+            </div>
+
+            <div class="form-card">
+                <h2 class="form-section-title"><i class="fas fa-info-circle"></i> Инструкция по сбору геоаналитики</h2>
+                <p>Перед тем как заполнить форму, перейдите на сайт <a href="https://yandex.ru/geoanalytics/platform?layer=searches&category=auto&ll=37.595915%2C55.764536&z=13.65" target="_blank">Яндекс Геоаналитика</a></p>
+                <ol>
+                    <li>Выберите категорию бизнеса: рестораны и бары</li>
+                    <li>Оцените по карте:
+                        <ul class="mt-2">
+                            <li><strong>Пешеходный трафик</strong> — число в легенде (например: 45 000 чел./день)</li>
+                            <li><strong>Автомобильный трафик</strong> — аналогично (авто/день)</li>
+                            <li><strong>Количество конкурентов</strong> — по точкам на карте в радиусе 500 м</li>
+                            <li><strong>Поисковые запросы</strong> — слой "Поисковые запросы" в Яндекс</li>
+                        </ul>
+                    </li>
+                    <li>Введите полученные значения в форму ниже</li>
+                </ol>
             </div>
             
             <div class="form-card">
@@ -149,23 +156,23 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label for="pedestrian_traffic" class="form-label">Пешеходный трафик, чел./день</label>
-                        <input type="number" step="100" min="0" class="form-control" id="pedestrian_traffic" 
-                               name="pedestrian_traffic" placeholder="45000" required>
+                        <input type="number" min="0" class="form-control" id="pedestrian_traffic" 
+                               name="pedestrian_traffic" placeholder="45000" >
                     </div>
                     <div class="col-md-6">
                         <label for="car_traffic" class="form-label">Автомобильный трафик, авто/день</label>
-                        <input type="number" step="100" min="0" class="form-control" id="car_traffic" 
-                               name="car_traffic" placeholder="15000" required>
+                        <input type="number" min="0" class="form-control" id="car_traffic" 
+                               name="car_traffic" placeholder="15000" >
                     </div>
                     <div class="col-md-6">
                         <label for="competitors_count" class="form-label">Количество конкурентов</label>
-                        <input type="number" step="1" min="0" class="form-control" id="competitors_count" 
-                               name="competitors_count" placeholder="8" required>
+                        <input type="number" min="0" class="form-control" id="competitors_count" 
+                               name="competitors_count" placeholder="8" >
                     </div>
                     <div class="col-md-6">
                         <label for="search_queries" class="form-label">Поисковые запросы, в месяц</label>
-                        <input type="number" step="10" min="0" class="form-control" id="search_queries" 
-                               name="search_queries" placeholder="1200" required>
+                        <input type="number" min="0" class="form-control" id="search_queries" 
+                               name="search_queries" placeholder="1200" >
                     </div>
                 </div>
             </div>
@@ -182,13 +189,13 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label for="operational_expenses" class="form-label">Операционные расходы, %</label>
-                        <input type="number" step="1" min="0" max="100" class="form-control" id="operational_expenses" 
+                        <input type="number" min="0" max="100" class="form-control" id="operational_expenses" 
                                name="operational_expenses" placeholder="50">
                         <div class="form-hint">От годовой выручки (аренда, зарплаты, коммунальные)</div>
                     </div>
                     <div class="col-md-6">
                         <label for="additional_payments" class="form-label">Дополнительные платежи, %</label>
-                        <input type="number" step="1" min="0" max="30" class="form-control" id="additional_payments" 
+                        <input type="number" min="0" max="30" class="form-control" id="additional_payments" 
                                name="additional_payments" placeholder="10">
                         <div class="form-hint">Налоги, маркетинг, ремонт</div>
                     </div>
