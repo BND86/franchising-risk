@@ -114,6 +114,20 @@ nav {
     box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
 }
 
+.title-box:hover {
+    background-color: var(--accent-color);
+    color: white;
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+.title-box.active {
+    background-color: var(--secondary-color);
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+}
+
 .footer {
     width: 100%;
     background-color: var(--primary-color);
