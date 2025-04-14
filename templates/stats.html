@@ -72,7 +72,7 @@
                     </div>
 
                     <div class="chart-box fixed-height">
-                        <h3>Распределение по категориям (без существенных)</h3>
+                        <h3>Распределение рисков по категориям</h3>
                         <div class="chart-container-wrapper">
                             <canvas id="category-bar-chart"></canvas>
                         </div>
@@ -81,12 +81,12 @@
 
                 <!-- Описание рисков -->
                 <div class="dashboard-row full-width">
-                    <h3>Описание рисков</h3>
+                    <h2>Описание рисков</h3>
                     
                     {% for key, value in stats.by_risk_type.items() %}
                         {% if value.count > 0 %}
                         <div class="risk-block">
-                            <h4>{{ risk_translations[key] }} ({{ value.count }})</h4>
+                            <h3>{{ risk_translations[key] }} ({{ value.count }})</h4>
                             {% for detail in value.details %}
                             <div class="risk-detail">
                                 <p class="question">Вопрос: {{ detail.question }}</p>
@@ -112,9 +112,12 @@
                     {% endfor %}
                 </div>
             </div>
-            <a href="/download/?session_id={{ session_id }}" download>
-                <button class="button-style">СКАЧАТЬ ОТЧЁТ</button>
-            </a>
+            <div class="download-section">
+                <a href="/download/?session_id={{ session_id }}" download>
+                    <button class="download-button">СКАЧАТЬ ОТЧЁТ</button>
+                </a>
+            </div>
+            
             {% elif session_id %}
             <div class="no-data-box">
                 <p>Нет данных для session_id: <b>{{ session_id }}</b></p>
@@ -187,19 +190,17 @@
                 datasets: [{
                     data: categoryData,
                     backgroundColor: [
-    '#9b59b6',  // фиолетовый  
-    '#3498db',  // синий  
-    '#1abc9c',  // бирюзовый  
-    '#34495e',  // темно-серо-синий  
-    '#e84393',  // розовый  
-    '#00b894',  // мятный  
-    '#6c5ce7',  // лавандовый  
-    '#fd79a8',  // пастельно-розовый  
-    '#a29bfe',  // светло-фиолетовый  
-    '#55efc4'   // аквамарин  
-],
-                    
-
+                        '#9b59b6',  // фиолетовый  
+                        '#3498db',  // синий  
+                        '#1abc9c',  // бирюзовый  
+                        '#34495e',  // темно-серо-синий  
+                        '#e84393',  // розовый  
+                        '#00b894',  // мятный  
+                        '#6c5ce7',  // лавандовый  
+                        '#fd79a8',  // пастельно-розовый  
+                        '#a29bfe',  // светло-фиолетовый  
+                        '#55efc4'   // аквамарин  
+                    ],
                     borderWidth: 1
                 }]
             },

@@ -295,18 +295,26 @@ async def submit_survey(request: Request,
     return RedirectResponse(url=f"/stats.html?session_id={session_id}", status_code=303)
 
 @app.post("/submit_owner")
-async def submit_survey(request: Request,
+async def submit_survey_owner(request: Request,
                         repo: Repository = Depends(get_owner_repo)):
     form_data = await request.form()
-    session_id = get_session_id(request)  # Идентификатор сессии пользователя    
+    session_id = get_session_id(request)
+    
+    print("\n=== Received form submission ===")
+    print(f"Session ID: {session_id}")
+    print("Form data:")
+    for key, value in form_data.items():
+        print(f"  {key}: {value}")
+    
     # Обработка данных формы
     for key, value in form_data.items():
-        if "_" in key:  # id вопроса и id ответа
-            question_id, option_id = map(lambda x: int(x.lstrip('q')), key.split("_"))
-            risk_type, recomendations, article, link = value.split("|")
-            await repo.save_response(session_id, question_id, option_id, risk_type, recomendations, article, link)  # Асинхронная запись
-    
-    # После обработки данных перенаправляем пользователя на страницу /stats.html
+        if key.startswith('q'):  
+            question_id = int(key[1:])
+            option_id, risk_type, recomendations, article, link = value.split("|")
+            print(f"Processing question {question_id}, option {option_id}")
+            await repo.save_response(session_id, question_id, option_id, risk_type, recomendations, article, link)
+
+    print("=== Form processing completed ===")
     return RedirectResponse(url=f"/stats_owner.html?session_id={session_id}", status_code=303)
 
 @app.get("/economic")
