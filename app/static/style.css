@@ -547,7 +547,7 @@ td:first-child {
 }
 
 .recommendation:before {
-    content: "Рекомендация";
+    content: "Пояснения";
     position: absolute;
     top: 0;
     left: 0;

@@ -21,22 +21,19 @@ app.mount("/static", StaticFiles(directory="app/static", html=True), name="stati
 templates = Jinja2Templates(directory="app/templates")
 
 class InputData(BaseModel):
-    # Финансы
-    start_investment: float
-    franchise_fee: float
-    royalty_percent: float 
-    payback_period: float
-    monthly_turnover: float
-    
-    # Геоаналитика
-    pedestrian_traffic: float 
-    car_traffic: float
-    competitors_count: float
-    search_queries: float
-    
-    # Дополнительные данные
-    operational_expenses: float
-    additional_payments: float
+    start_investment: float = 1_300_000
+    franchise_fee: float = 350_000
+    royalty_percent: float = 2
+    payback_period: float = 12
+    monthly_turnover: float = 900_000
+
+    pedestrian_traffic: float = 190_000
+    car_traffic: float = 90_000
+    competitors_count: float = 447
+    search_queries: float = 1_135_000
+
+    operational_expenses: float = 50
+    additional_payments: float = 10
 
 
 # Словарь для перевода типов рисков на русский язык
@@ -276,31 +273,46 @@ def index(request: Request, session_id: str = Query(None, description="Session I
 async def submit_survey(request: Request,
                         repo: Repository = Depends(get_user_repo)):
     form_data = await request.form()
-    session_id = get_session_id(request)  # Идентификатор сессии пользователя    
+    session_id = get_session_id(request)
+    
+    print("\n=== Received form submission ===")
+    print(f"Session ID: {session_id}")
+    print("Form data:")
+    for key, value in form_data.items():
+        print(f"  {key}: {value}")
+    
     # Обработка данных формы
     for key, value in form_data.items():
-        if "_" in key:  # id вопроса и id ответа
-            #question_id, option_id = map(int, key.split("_"))
-            question_id, option_id = map(lambda x: int(x.lstrip('q')), key.split("_"))
-            risk_type, recomendations, article, link = value.split("|")
-            await repo.save_response(session_id, question_id, option_id, risk_type, recomendations, article, link)  # Асинхронная запись
-    
-    # После обработки данных перенаправляем пользователя на страницу /stats.html
+        if key.startswith('q'):  
+            question_id = int(key[1:])
+            option_id, risk_type, recomendations, article, link = value.split("|")
+            print(f"Processing question {question_id}, option {option_id}")
+            await repo.save_response(session_id, question_id, option_id, risk_type, recomendations, article, link)
+
+    print("=== Form processing completed ===")
     return RedirectResponse(url=f"/stats.html?session_id={session_id}", status_code=303)
 
 @app.post("/submit_owner")
-async def submit_survey(request: Request,
+async def submit_survey_owner(request: Request,
                         repo: Repository = Depends(get_owner_repo)):
     form_data = await request.form()
-    session_id = get_session_id(request)  # Идентификатор сессии пользователя    
+    session_id = get_session_id(request)
+    
+    print("\n=== Received form submission ===")
+    print(f"Session ID: {session_id}")
+    print("Form data:")
+    for key, value in form_data.items():
+        print(f"  {key}: {value}")
+    
     # Обработка данных формы
     for key, value in form_data.items():
-        if "_" in key:  # id вопроса и id ответа
-            question_id, option_id = map(lambda x: int(x.lstrip('q')), key.split("_"))
-            risk_type, recomendations, article, link = value.split("|")
-            await repo.save_response(session_id, question_id, option_id, risk_type, recomendations, article, link)  # Асинхронная запись
-    
-    # После обработки данных перенаправляем пользователя на страницу /stats.html
+        if key.startswith('q'):  
+            question_id = int(key[1:])
+            option_id, risk_type, recomendations, article, link = value.split("|")
+            print(f"Processing question {question_id}, option {option_id}")
+            await repo.save_response(session_id, question_id, option_id, risk_type, recomendations, article, link)
+
+    print("=== Form processing completed ===")
     return RedirectResponse(url=f"/stats_owner.html?session_id={session_id}", status_code=303)
 
 @app.get("/economic")
@@ -308,8 +320,34 @@ async def economic_page(request: Request):
     return templates.TemplateResponse("economic.html", {"request": request})
 
 @app.post("/result")
-async def result_page(request: Request, input_data: InputData = Form(...)):
-    results = calculate_results(input_data.model_dump())
+async def result_page(
+    request: Request,
+    start_investment: float = Form(default=1_300_000),
+    franchise_fee: float = Form(default=350_000),
+    royalty_percent: float = Form(default=2),
+    payback_period: float = Form(default=12),
+    monthly_turnover: float = Form(default=900_000),
+    pedestrian_traffic: float = Form(default=190_000),
+    car_traffic: float = Form(default=90_000),
+    competitors_count: float = Form(default=447),
+    search_queries: float = Form(default=1_135_000),
+    operational_expenses: float = Form(default=50),
+    additional_payments: float = Form(default=10),
+):
+    input_data = InputData(
+        start_investment=start_investment,
+        franchise_fee=franchise_fee,
+        royalty_percent=royalty_percent,
+        payback_period=payback_period,
+        monthly_turnover=monthly_turnover,
+        pedestrian_traffic=pedestrian_traffic,
+        car_traffic=car_traffic,
+        competitors_count=competitors_count,
+        search_queries=search_queries,
+        operational_expenses=operational_expenses,
+        additional_payments=additional_payments,
+    )
+    results = calculate_results(input_data.dict())
     return templates.TemplateResponse("result_econom.html", {"request": request, "results": results})
 
 @app.get("/download/")
@@ -318,3 +356,12 @@ async def download(response_class=FileResponse,
     stats = get_risk_statistics(session_id)
     file_path = make_pdf(stats, session_id)
     return FileResponse(path=file_path, filename="risk_report.pdf", media_type='application/pdf')
+
+
+@app.post("/test-submit")
+async def test_submit(request: Request):
+    form_data = await request.form()
+    print("\n=== Received form data ===")
+    for key, value in form_data.items():
+        print(f"{key}: {value}")
+    return {"status": "success"}

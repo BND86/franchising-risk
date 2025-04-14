@@ -48,6 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // 2. Управление условными вопросами
+    // 2. Управление условными вопросами
     function initConditionalQuestions() {
         document.querySelectorAll('.survey-options input[type="radio"]').forEach(radio => {
             radio.addEventListener('change', function() {
@@ -55,10 +56,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 const currentQuestion = this.closest('.survey-question');
                 const categoryGroup = currentQuestion.closest('.category-group');
                 
-                // Скрываем все условные вопросы в текущей категории
-                categoryGroup.querySelectorAll('.survey-question[data-conditional="true"]').forEach(q => {
-                    q.style.display = 'none';
-                });
+                // Скрываем только те условные вопросы, которые связаны с текущим вопросом
+                // (а не все в категории)
+                if (nextQuestionId) {
+                    const previouslyShown = categoryGroup.querySelectorAll('.survey-question[data-conditional="true"]');
+                    previouslyShown.forEach(q => {
+                        // Скрываем только если это не следующий вопрос и не другие уже отвеченные вопросы
+                        if (q.id !== `question-${nextQuestionId}` && !hasAnswer(q)) {
+                            q.style.display = 'none';
+                        }
+                    });
+                }
                 
                 // Если есть следующий вопрос и категория открыта - показываем его
                 if (nextQuestionId && categoryGroup.classList.contains('category-opened')) {
@@ -72,6 +80,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         });
+        
+        // Функция для проверки, есть ли ответ на вопрос
+        function hasAnswer(question) {
+            const inputs = question.querySelectorAll('input[type="radio"]');
+            for (let input of inputs) {
+                if (input.checked) return true;
+            }
+            return false;
+        }
     }
 
     // 3. Валидация формы
@@ -90,7 +107,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // Проверяем ВСЕ обязательные вопросы, независимо от того, открыта категория или нет
             document.querySelectorAll('.survey-question[data-required="true"]').forEach(question => {
                 const questionId = question.getAttribute('data-id');
-                const selectedOption = form.querySelector(`input[name^="q${questionId}_"]:checked`);
+                const selectedOption = form.querySelector(`input[name="q${questionId}"]:checked`); // <--- тут
+            
                 
                 if (!selectedOption) {
                     allAnswered = false;
