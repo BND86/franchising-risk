@@ -36,7 +36,7 @@
             {% if stats %}
             <div class="dashboard-grid">
                 <!-- Первая строка: таблица и круговая диаграмма -->
-                <div class="dashboard-row">
+                <div class="dashboard-row dashboard-row-flex" >
                     <div class="risk-table-container">
                         <table>
                             <thead>
@@ -66,20 +66,19 @@
                 </div>
 
                 <!-- Вторая строка: диаграммы категорий -->
-                <div class="dashboard-row">
-                    <div class="chart-box fixed-height">
+                <div class="dashboard-row dashboard-row-flex">
+                    <div class="chart-box fixed-height ">
                         <h3>Распределение рисков по категориям</h3>
                         <div class="chart-container-wrapper">
                             <canvas id="category-pie-chart"></canvas>
                         </div>
                     </div>
 
-                    <div class="pie-chart-container">
-                        <div class="chart-box fixed-height">
-                            <h3>Распределение рисков по типам</h3>
-                            <div class="chart-container-wrapper">
-                                <canvas id="risk-pie-chart"></canvas>
-                            </div>
+                    
+                    <div class="chart-box fixed-height" >
+                        <h3>Распределение рисков по типам</h3>
+                        <div class="chart-container-wrapper">
+                            <canvas id="risk-pie-chart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -258,7 +257,9 @@
             }
         });
 
-        const categoryLabelsBar = {{ stats.by_category.keys()|list|tojson }};
+        const categoryLabelsBar = {{ stats.by_category.keys()|list|tojson }}.map(label => {
+            return label.length > 15 ? label.substring(0, 15) + '...' : label;
+        });
         const lowData = {{ stats.by_category.values()|map(attribute='low')|list|tojson }};
         const mediumData = {{ stats.by_category.values()|map(attribute='medium')|list|tojson }};
         const highData = {{ stats.by_category.values()|map(attribute='high')|list|tojson }};
@@ -301,6 +302,11 @@
                         title: {
                             display: true,
                             text: 'Категории'
+                        },
+                        ticks: {
+                            maxRotation: 30, // Поворот до 90 градусов
+                            minRotation: 15, // Минимальный угол поворота
+                            autoSkip: true,   // Автоматическая пропускность
                         }
                     },
                     y: {
@@ -318,6 +324,12 @@
                     },
                     tooltip: {
                         callbacks: {
+                            // Настроим всплывающее сообщение для категории
+                            title: function(tooltipItem) {
+                                // Покажем полное название категории
+                                const fullLabel = {{ stats.by_category.keys()|list|tojson }};
+                                return fullLabel[tooltipItem[0].dataIndex]; // Полное название по индексу
+                            },
                             label: function(context) {
                                 return context.dataset.label + ': ' + context.raw;
                             }
@@ -326,6 +338,7 @@
                 }
             }
         });
+
     </script>
 </body>
 </html>
