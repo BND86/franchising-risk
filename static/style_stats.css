@@ -1,4 +1,6 @@
+/*Выделение существенных рисков*/
 :root {
+    /* Основные цвета */
     --primary-color: #4361ee;
     --secondary-color: #3a0ca3;
     --accent-color: #7209b7;
@@ -10,8 +12,16 @@
     --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     --transition: all 0.3s ease;
     --header-height: 70px;
+
+    /* Цвета для critical-рисков (красная палитра) */
+    --critical-main: #E74C3C;
+    --critical-dark: #C0392B;
+    --critical-light: #FFEBEE;
+    --critical-accent: #EC7063;
+    --critical-text: #2C3E50;
 }
 
+/* Общие стили */
 * {
     margin: 0;
     padding: 0;
@@ -678,4 +688,174 @@ td:first-child {
 .download-button:active {
     transform: translateY(0);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+
+/* Стили для critical-рисков */
+.critical-risk {
+    border: 1px solid var(--critical-main);
+    background-color: rgba(255, 255, 255, 0.452);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.15);
+    transition: var(--transition);
+    position: relative;
+}
+
+
+.critical-risk:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(231, 76, 60, 0.2);
+}
+
+.critical-risk::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #C0392B 0%, #D35400 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.critical-risk:hover::after {
+    opacity: 1;
+} 
+
+.critical-message {
+    color: #ff0000;
+    font-weight: bold;
+    font-size: 1.1em;
+    margin: 1rem 0;
+    padding: 0.75rem 1rem;
+    background-color: rgba(249, 87, 69, 0.04);
+    border-left: 4px solid var(--critical-main);
+    border-radius: 4px;
+}
+
+
+.question-critical {
+    font-weight: 600;
+    color: var(--critical-text);
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-left: 1.75rem;
+}
+
+.question-critical::before {
+    content: "Q";
+    color: var(--critical-main);
+    font-weight: bold;
+    margin-right: 0.75rem;
+    position: absolute;
+    left: 0;
+    font-size: 1.2em;
+}
+
+.answer-critical {
+    background-color: rgba(249, 87, 69, 0.04);
+    padding: 1rem 1.5rem 1rem 2.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.25rem;
+    color: var(--critical-text);
+    border-left: 4px solid var(--critical-main);
+    position: relative;
+}
+
+.answer-critical::before {
+    content: "A";
+    color: var(--critical-main);
+    font-weight: bold;
+    margin-right: 0.75rem;
+    position: absolute;
+    left: 0.75rem;
+    font-size: 1.2em;
+}
+
+.recommendation-critical {
+    background-color: rgba(231, 76, 60, 0.08);
+    border-left: 4px solid var(--critical-main);
+    padding: 1.25rem 1.5rem 1.25rem 3.5rem;
+    margin: 1.5rem 0;
+    border-radius: 8px;
+    position: relative;
+    transition: var(--transition);
+    width: 100%;
+    max-width: 1200px;
+}
+
+.recommendation-critical:hover {
+    background-color: rgba(231, 76, 60, 0.12);
+    transform: translateX(5px);
+}
+
+.recommendation-critical::before {
+    content: "Пояснения";
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: var(--critical-main);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-bottom-right-radius: 8px;
+    letter-spacing: 0.5px;
+}
+
+.recommendation-critical strong {
+    color: var(--critical-dark);
+    font-weight: 600;
+}
+
+.recommendation-critical a {
+    color: var(--critical-dark);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.recommendation-critical a:hover {
+    color: var(--critical-main);
+    text-decoration: underline;
+}
+
+.critical-risk h3 {
+    color: #87281d;
+    font-size: 1.5rem;
+    font-weight: 600;
+    position: relative;
+    padding-bottom: 8px;
+    margin: 1.5rem 0 1rem;
+}
+
+.critical-risk h3::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background-color: var(--critical-dark);
+}
+
+/* Остальные стили (header, таблицы, charts и т.д.) остаются без изменений */
+/* ... (все остальные стили из вашего исходного CSS) ... */
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .critical-risk {
+        padding: 1rem;
+    }
+    
+    .recommendation-critical {
+        padding-left: 2.5rem;
+    }
 }
