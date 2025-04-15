@@ -83,6 +83,7 @@ nav {
     cursor: pointer;
     transition: var(--transition);
     text-decoration: none;
+    display: inline-block;
 }
 
 .nav-button:hover {
@@ -124,6 +125,53 @@ nav {
     color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-decoration: none;
+}
+
+.dropdown-container {
+    position: relative !important;
+    display: inline-block !important;
+    height: 40px !important;
+}
+
+.dropdown-menu {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    width: 100% !important;
+    background-color: var(--light-color) !important;
+    border-radius: 0 0 10px 10px !important;
+    box-shadow: var(--box-shadow) !important;
+    overflow: hidden !important;
+    display: none !important;
+    z-index: 1001 !important;
+    min-width: 200px !important;
+    transform: translateY(3px) !important;
+    border-radius: 10px !important;
+}
+
+.dropdown-menu a {
+    display: block !important;
+    padding: 10px 20px !important;
+    color: var(--primary-color) !important;
+    text-decoration: none !important;
+    font-size: 0.9rem !important;
+    transition: var(--transition) !important;
+}
+
+.dropdown-menu a:hover {
+    background-color: var(--accent-color) !important;
+    color: white !important;
+    text-decoration: none !important;
+}
+
+.dropdown-container:hover .dropdown-menu {
+    display: block !important;
+}
+
+.dropdown-container:hover .nav-button {
+    background-color: var(--accent-color) !important;
+    color: white !important;
+    transform: translateY(-3px) !important;
 }
 
 .footer {
@@ -420,4 +468,68 @@ blockquote {
     .section-title {
         font-size: 1.5rem;
     }
+}
+
+/* Дополнительные стили для формы экономического анализа */
+.form-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: var(--box-shadow);
+}
+
+.form-section-title {
+    color: var(--secondary-color);
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 8px;
+}
+
+.form-control {
+    border-radius: 8px;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    transition: var(--transition);
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
+}
+
+.form-hint {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-top: 5px;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border: none;
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: var(--transition);
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+.info-alert {
+    background-color: rgba(67, 97, 238, 0.1);
+    border-left: 4px solid var(--primary-color);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
 }

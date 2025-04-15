@@ -86,6 +86,7 @@ nav {
     cursor: pointer;
     transition: var(--transition);
     text-decoration: none;
+    display: inline-block;
 }
 
 .nav-button:hover {
@@ -127,6 +128,53 @@ nav {
     color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-decoration: none;
+}
+
+.dropdown-container {
+    position: relative;
+    display: inline-block;
+    height: 40px;
+}
+
+.dropdown-menu {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    width: 100% !important;
+    background-color: var(--light-color) !important;
+    border-radius: 0 0 10px 10px !important;
+    box-shadow: var(--box-shadow) !important;
+    overflow: hidden !important;
+    display: none !important;
+    z-index: 1001 !important;
+    min-width: 200px !important;
+    transform: translateY(3px) !important;
+    border-radius: 10px !important;
+}
+
+.dropdown-menu a {
+    display: block !important;
+    padding: 10px 20px !important;
+    color: var(--primary-color) !important;
+    text-decoration: none !important;
+    font-size: 0.9rem !important;
+    transition: var(--transition) !important;
+}
+
+.dropdown-menu a:hover {
+    background-color: var(--accent-color) !important;
+    color: white !important;
+    text-decoration: none !important;
+}
+
+.dropdown-container:hover .dropdown-menu {
+    display: block !important;
+}
+
+.dropdown-container:hover .nav-button {
+    background-color: var(--accent-color) !important;
+    color: white !important;
+    transform: translateY(-3px) !important;
 }
 
 .footer {

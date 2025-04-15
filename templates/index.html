@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/static/favicon.png" type="image/png">
     <title>ПроФраншиза</title>
     <link rel="stylesheet" href="/static/style_menu.css">
 </head>
@@ -14,7 +15,13 @@
     </botton>
     <nav>
         <a class="nav-button" href="/">Главная</a>
-        <a class="nav-button" href="/user">Пользователь</a>
+        <div class="dropdown-container">
+            <a class="nav-button" href="/user">Пользователь</a>
+            <div class="dropdown-menu">
+                <a href="/contract">Договорной анализ</a>
+                <a href="/economic">Экономический анализ</a>
+            </div>
+        </div>
         <a class="nav-button" href="/owner">Правообладатель</a>
         <a class="nav-button" href="/glossary">Глоссарий</a>
     </nav>

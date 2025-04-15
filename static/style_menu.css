@@ -91,6 +91,7 @@ main {
 nav {
     display: flex;
     gap: 15px;
+    align-items: center;
 }
 
 .nav-button {
@@ -105,6 +106,7 @@ nav {
     cursor: pointer;
     transition: var(--transition);
     text-decoration: none;
+    display: inline-block;
 }
 
 .nav-button:hover {
@@ -146,6 +148,56 @@ nav {
     color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-decoration: none;
+}
+
+.dropdown-container {
+    position: relative;
+    display: inline-block;
+    height: 40px;
+    transform: translateY(-3px);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: var(--light-color);
+    border-radius: 0 0 10px 10px;
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+    display: none;
+    z-index: 1001;
+    min-width: 200px;
+    transform: translateY(3px);
+    border-radius: 10px;
+     
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px 20px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+.dropdown-menu a:hover {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+/* Показываем меню при наведении */
+.dropdown-container:hover .dropdown-menu {
+    display: block;
+}
+
+/* Стиль для основной кнопки при наведении */
+.dropdown-container:hover .nav-button {
+    background-color: var(--accent-color);
+    color: white;
+    transform: translateY(-3px);
 }
 
 .footer {
@@ -341,7 +393,7 @@ hr.section-divider {
 .sub-features li {
     margin-bottom: 8px;
     position: relative;
-    padding-left: 15px;
+    padding-left: 22px;
 }
 
 .sub-features li::before {
