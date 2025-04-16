@@ -3,19 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ПроФраншиза</title>
+    <link rel="icon" href="/static/favicon.png" type="image/png">
+    <title>Опрос | ПроФраншиза</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 
 <header>
-    <div class="title-box">
-        ПроФраншиза
-    </div>
+    <botton class="title-box">
+        <a style="text-decoration: none; color: white;" href="/">ПроФраншиза</a>
+    </botton>
     
     <nav>
-        <a class="nav-button" href="/">Меню</a>
-        <a class="nav-button" href="/user">Пользователь</a>
+        <a class="nav-button" href="/">Главная</a>
+        <div class="dropdown-container">
+            <a class="nav-button" href="/user">Пользователь</a>
+            <div class="dropdown-menu">
+                <a href="/contract">Договорный анализ</a>
+                <a href="/economic">Экономический анализ</a>
+            </div>
+        </div>
         <a class="nav-button" href="/owner">Правообладатель</a>
         <a class="nav-button" href="/glossary">Глоссарий</a>
     </nav>
@@ -81,7 +88,7 @@
 
 <div class="footer">
     <div class="footer-box"> 
-        Сделано в 2025 году | Подготовила проект Команда 3
+        © (www.pf.claba.ru) | Все права защищены, 2025
     </div>
 </div>
 

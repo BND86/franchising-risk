@@ -57,7 +57,7 @@ main {
 }
 
 .content-wrapper {
-    width: 40%;
+    width: 70%;
     background: white;
     padding: 40px;
     border-radius: var(--border-radius);
@@ -66,6 +66,11 @@ main {
     animation: fadeIn 0.6s ease-out forwards;
     margin-bottom: 40px;
     margin-top: 90px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 nav {
@@ -85,6 +90,7 @@ nav {
     cursor: pointer;
     transition: var(--transition);
     text-decoration: none;
+    display: inline-block;
 }
 
 .nav-button:hover {
@@ -114,6 +120,67 @@ nav {
     box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
 }
 
+.title-box:hover {
+    background-color: var(--accent-color);
+    color: white;
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+.title-box.active {
+    background-color: var(--secondary-color);
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+}
+
+.dropdown-container {
+    position: relative;
+    display: inline-block;
+    height: 40px;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: var(--light-color);
+    border-radius: 0 0 10px 10px;
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+    display: none;
+    z-index: 1001;
+    min-width: 200px;
+    transform: translateY(3px);
+    border-radius: 10px;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px 20px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+.dropdown-menu a:hover {
+    background-color: var(--accent-color);
+    color: white;
+    text-decoration: none;
+}
+
+.dropdown-container:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-container:hover .nav-button {
+    background-color: var(--accent-color);
+    color: white;
+    transform: translateY(-3px);
+}
+
 .footer {
     width: 100%;
     background-color: var(--primary-color);
@@ -135,16 +202,6 @@ nav {
 }
 
 /*Опросник*/
-.survey-container {
-    max-width: 1000px;
-    margin: 200px auto;
-    padding: 20px;
-    background: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-}
-
 .survey-question {
     display: block;
     background: rgba(67, 97, 238, 0.08);
@@ -153,7 +210,7 @@ nav {
     font-size: 1.1rem;
     font-weight: 600;
     margin: 15px auto;
-    max-width: 700px;
+    width: 80%;
     text-align: center;
     border: 1px solid rgba(67, 97, 238, 0.1);
     box-shadow: var(--box-shadow);
@@ -687,35 +744,97 @@ table {
 
 /*Обязательные вопросы*/
 
-        .required-marker {
-            color: red;
-            margin-left: 4px;
-        }
-        
-        .error-message {
-            color: red;
-            text-align: center;
-            margin: 15px 0;
-            padding: 10px;
-            background-color: #ffeeee;
-            border: 1px solid #ffcccc;
-            border-radius: 4px;
-        }
-        
-        .survey-question.unanswered {
-            background-color: #ffeeee;
-            border-left: 3px solid red;
-            padding-left: 10px;
-        }
-        
-        .option {
-            margin: 8px 0;
-        }
-   
-        .category-header {
-            margin-top: 30px;
-            margin-bottom: 15px;
-            padding-bottom: 5px;
-            border-bottom: 2px solid #ddd;
-            color: #333;
-        }
+.required-marker {
+    color: red;
+    margin-left: 4px;
+}
+
+.error-message {
+    color: red;
+    text-align: center;
+    margin: 15px 0;
+    padding: 10px;
+    background-color: #ffeeee;
+    border: 1px solid #ffcccc;
+    border-radius: 4px;
+}
+
+.survey-question.unanswered {
+    background-color: #ffeeee;
+    border-left: 3px solid red;
+    padding-left: 10px;
+}
+
+.option {
+    margin: 8px 0;
+}
+
+.category-header {
+    margin-top: 30px;
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #ddd;
+    color: #333;
+}
+
+@media (max-width: 768px) {
+    /* Header styles */
+    header {
+        padding: 10px 5%;
+        flex-direction: column;
+        height: auto;
+        gap: 10px;
+        position: relative; /* Добавляем для z-index */
+        z-index: 1000; /* Поднимаем над контентом */
+        background-color: var(--primary-color); /* Фон должен быть непрозрачным */
+    }
+
+    /* Main content */
+    main {
+        padding-top: 200px; /* Увеличиваем отступ сверху */
+        position: relative;
+        z-index: 1; /* Контент под header */
+    }
+
+    /* Navigation */
+    nav {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        margin-bottom: 10px; /* Отступ снизу */
+    }
+
+    /* Dropdown styles */
+    .dropdown-container {
+        width: 100%;
+        position: relative;
+    }
+
+    .dropdown-menu {
+        width: calc(100% - 30px); /* Ширина с учетом отступов */
+        margin: 0 auto; /* Центрирование */
+        position: absolute;
+        top: 100%;
+        left: 15px;
+        z-index: 1001;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    /* Остальные стили остаются без изменений */
+    .nav-button {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+        width: 100%;
+        box-sizing: border-box;
+        text-align: center;
+    }
+    
+    .content-wrapper {
+        width: 100%;
+    }
+    
+    .survey-question {
+        width: 100%;
+    }
+}

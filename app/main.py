@@ -36,6 +36,7 @@ class InputData(BaseModel):
     additional_payments: float = 10
 
 
+
 # Словарь для перевода типов рисков на русский язык
 RISK_TRANSLATIONS = {
     "high": "Высокий риск",
@@ -271,7 +272,7 @@ def index(request: Request, session_id: str = Query(None, description="Session I
 
 @app.post("/submit")
 async def submit_survey(request: Request,
-                        repo: Repository = Depends(get_user_repo)):
+                       repo: Repository = Depends(get_user_repo)):
     form_data = await request.form()
     session_id = get_session_id(request)
     
