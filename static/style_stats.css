@@ -562,7 +562,7 @@ td:first-child {
     }
 }
 
-@media (max-width: 768px) {
+/*@media (max-width: 768px) {
     header {
         padding: 10px 5%;
         flex-direction: column;
@@ -601,6 +601,60 @@ td:first-child {
     .chart-box {
         height: 350px;
     }
+}*/
+
+@media (max-width: 768px) {
+    /* Header styles */
+    header {
+        padding: 10px 5%;
+        flex-direction: column;
+        height: auto;
+        gap: 10px;
+        position: relative; /* Добавляем для z-index */
+        z-index: 1000; /* Поднимаем над контентом */
+        background-color: var(--primary-color); /* Фон должен быть непрозрачным */
+    }
+
+    /* Main content */
+    main {
+        padding-top: 200px; /* Увеличиваем отступ сверху */
+        position: relative;
+        z-index: 1; /* Контент под header */
+    }
+
+    /* Navigation */
+    nav {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        margin-bottom: 10px; /* Отступ снизу */
+    }
+
+    /* Dropdown styles */
+    .dropdown-container {
+        width: 100%;
+        position: relative;
+    }
+
+    .dropdown-menu {
+        width: calc(100% - 30px); /* Ширина с учетом отступов */
+        margin: 0 auto; /* Центрирование */
+        position: absolute;
+        top: 100%;
+        left: 15px;
+        z-index: 1001;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    /* Остальные стили остаются без изменений */
+    .nav-button {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+        width: 100%;
+        box-sizing: border-box;
+        text-align: center;
+    }
 }
 
 @media (max-width: 480px) {
@@ -622,8 +676,6 @@ td:first-child {
         padding-left: 2.5rem;
     }
 }
-
-/* Добавьте эти стили в ваш style_stats.css */
 
 /* Основные стили для контейнеров диаграмм */
 .chart-container {
@@ -657,7 +709,6 @@ td:first-child {
     padding: 1rem;
 }
 
-/* Контейнер для canvas - ключевое изменение */
 .chart-container-wrapper {
     flex: 1;
     position: relative;

@@ -84,7 +84,7 @@
                 </div>
 
                 <!-- Итоговый результат -->
-                <div class="dashboard-row full-width">
+                <div class="dashboard-row full-width" style="max-width: 100%;">
                     <h2>Результат оценки рисков</h2>
 
                     {% set risk = namespace(significant=0, high=0, medium=0, low=0) %}
@@ -103,36 +103,36 @@
 
                     {% set total_risk = risk.significant + risk.high + risk.medium + risk.low %}
 
-                    <div class="risk-block result-conclusion risk-summary-block">
+                    <div class="risk-block result-conclusion risk-summary-block" style="max-width: 100%;">
                         {% if risk.significant > 0 %}
-                            <div class="risk-detail no-risk">
-                                <div class="critical-message">
+                            <div class="risk-detail no-risk" style="max-width: 100%;">
+                                <div class="critical-message" style="max-width: 100%;">
                                     Внимание! Договор не может быть заключен, так как отсутствуют существенные условия.
                                 </div>
                             </div>
                             {% endif %}
                         {% if total_risk == 0 %}
-                            <div class="risk-detail no-risk">
+                            <div class="risk-detail no-risk" style="max-width: 100%;">
                                 <h4>✅ Риски не обнаружены</h4>
                                 <p>Договор соответствует установленным критериям безопасности. Нарушений и потенциально опасных положений не выявлено.</p>
                             </div>
                         {% elif risk.high >= 3 or (total_risk > 0 and (risk.high / total_risk) >= 0.4) %}
-                            <div class="risk-detail high-risk">
+                            <div class="risk-detail high-risk" style="max-width: 100%;">
                                 <h4>🚨 Высокий уровень рисков</h4>
                                 <p>Количество критичных условий превышает допустимый порог. Договор не соответствует требованиям безопасного заключения.</p>
                             </div>
                         {% elif risk.medium >= 3 or (total_risk > 0 and (risk.medium / total_risk) >= 0.5) %}
-                            <div class="risk-detail medium-risk">
+                            <div class="risk-detail medium-risk" style="max-width: 100%;">
                                 <h4>⚠️ Значительные риски</h4>
                                 <p>Условия договора содержат отклонения, требующие дополнительной правовой и экономической проверки.</p>
                             </div>
                         {% elif risk.low == total_risk %}
-                            <div class="risk-detail low-risk">
+                            <div class="risk-detail low-risk" style="max-width: 100%;">
                                 <h4>🟡 Незначительные риски</h4>
                                 <p>Обнаруженные риски не превышают минимального порога. Договор может считаться условно допустимым после устранения выявленных технических замечаний.</p>
                             </div>
                         {% else %}
-                            <div class="risk-detail mixed-risk">
+                            <div class="risk-detail mixed-risk" style="max-width: 100%;">
                                 <h4>📌 Смешанный уровень рисков</h4>
                                 <p>Договор содержит условия различной степени риска. Требуется комплексная правовая и финансовая экспертиза.</p>
                             </div>
@@ -141,14 +141,14 @@
 
 
                 <!-- Описание рисков -->
-                <div class="dashboard-row full-width">
+                <div class="dashboard-row full-width" style="max-width: 100%;">
                     <h2>Описание рисков</h2>
                     
                     {% for key, value in stats.by_risk_type.items() %}
                         {% if value.count > 0 %}
-                        <div class="risk-block {% if key == 'significant' %}critical-risk{% endif %}">
+                        <div class="risk-block {% if key == 'significant' %}critical-risk{% endif %}" style="max-width: 100%;">
                             {% if key == 'significant' %}
-                                <div class="critical-message">
+                                <div class="critical-message" style="max-width: 100%;">
                                     Внимание! Договор не может быть заключен, так как отсутствуют существенные условия.
                                 </div>
                             {% endif %}
@@ -156,11 +156,11 @@
                             
                             {% for detail in value.details %}
                             {% if key == 'significant' %}
-                            <div class="risk-detail-critical">
-                                <p class="question-critical">Вопрос: {{ detail.question }}</p>
-                                <p class="answer-critical">Ответ: {{ detail.answer }}</p>
+                            <div class="risk-detail-critical" style="max-width: 100%;">
+                                <p class="question-critical" style="max-width: 100%;">Вопрос: {{ detail.question }}</p>
+                                <p class="answer-critical" style="max-width: 100%;">Ответ: {{ detail.answer }}</p>
                                 {% if detail.recomendations %}
-                                <div class="recommendation-critical">
+                                <div class="recommendation-critical" style="max-width: 100%;">
                                     <p>
                                         {% for rec in detail.recomendations %}
                                             {{ rec }}{% if not loop.last %}, {% endif %}
@@ -175,11 +175,11 @@
                                 {% endif %}
                             </div>    
                             {% else %}
-                            <div class="risk-detail">
-                                <p class="question">Вопрос: {{ detail.question }}</p>
-                                <p class="answer">Ответ: {{ detail.answer }}</p>
+                            <div class="risk-detail" style="max-width: 100%;">
+                                <p class="question" style="max-width: 100%;">Вопрос: {{ detail.question }}</p>
+                                <p class="answer" style="max-width: 100%;">Ответ: {{ detail.answer }}</p>
                                 {% if detail.recomendations %}
-                                <div class="recommendation">
+                                <div class="recommendation" style="max-width: 100%;">
                                     <p>
                                         {% for rec in detail.recomendations %}
                                             {{ rec }}{% if not loop.last %}, {% endif %}
@@ -201,11 +201,11 @@
                 </div>
             </div>            
             {% elif session_id %}
-            <div class="no-data-box">
+            <div class="no-data-box" style="max-width: 100%;">
                 <p>Нет данных для session_id: <b>{{ session_id }}</b></p>
             </div>
             {% else %}
-            <div class="no-data-box">
+            <div class="no-data-box" style="max-width: 100%;">
                 <p>Session ID не был передан.</p>
             </div>
             {% endif %}
