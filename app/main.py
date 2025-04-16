@@ -253,7 +253,7 @@ async def read_owner(request: Request,
 async def read_glossary(request: Request):
     return templates.TemplateResponse("glossary.html", {"request": request})
 
-@app.get("/stats.html")
+@app.get("/stats")
 def index(request: Request, session_id: str = Query(None, description="Session ID to filter responses")):
     if not session_id:
         return templates.TemplateResponse("stats.html", {"request": request, "stats": None, "session_id": None, "risk_translations": RISK_TRANSLATIONS})
@@ -261,7 +261,7 @@ def index(request: Request, session_id: str = Query(None, description="Session I
     stats = get_risk_statistics(session_id)
     return templates.TemplateResponse("stats.html", {"request": request, "stats": stats, "session_id": session_id, "risk_translations": RISK_TRANSLATIONS})
 
-@app.get("/stats_owner.html")
+@app.get("/stats_owner")
 def index(request: Request, session_id: str = Query(None, description="Session ID to filter responses")):
     if not session_id:
         return templates.TemplateResponse("stats_owner.html", {"request": request, "stats": None, "session_id": None, "risk_translations": RISK_TRANSLATIONS})
@@ -291,7 +291,7 @@ async def submit_survey(request: Request,
             await repo.save_response(session_id, question_id, option_id, risk_type, recomendations, article, link)
 
     print("=== Form processing completed ===")
-    return RedirectResponse(url=f"/stats.html?session_id={session_id}", status_code=303)
+    return RedirectResponse(url=f"/stats?session_id={session_id}", status_code=303)
 
 @app.post("/submit_owner")
 async def submit_survey_owner(request: Request,
@@ -314,7 +314,7 @@ async def submit_survey_owner(request: Request,
             await repo.save_response(session_id, question_id, option_id, risk_type, recomendations, article, link)
 
     print("=== Form processing completed ===")
-    return RedirectResponse(url=f"/stats_owner.html?session_id={session_id}", status_code=303)
+    return RedirectResponse(url=f"/stats_owner?session_id={session_id}", status_code=303)
 
 @app.get("/economic")
 async def economic_page(request: Request):
@@ -351,13 +351,19 @@ async def result_page(
     results = calculate_results(input_data.dict())
     return templates.TemplateResponse("result_econom.html", {"request": request, "results": results})
 
-@app.get("/download/")
+@app.get("/stats/download")
 async def download(response_class=FileResponse,
                    session_id: str = Query(None, description="Session ID to filter responses")):
     stats = get_risk_statistics(session_id)
     file_path = make_pdf(stats, session_id)
     return FileResponse(path=file_path, filename="risk_report.pdf", media_type='application/pdf')
 
+@app.get("/stats_owner/download")
+async def download(response_class=FileResponse,
+                   session_id: str = Query(None, description="Session ID to filter responses")):
+    stats = get_risk_statistics_owner(session_id)
+    file_path = make_pdf(stats, session_id)
+    return FileResponse(path=file_path, filename="risk_report.pdf", media_type='application/pdf')
 
 @app.post("/test-submit")
 async def test_submit(request: Request):

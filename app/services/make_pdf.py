@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 from html import escape
 
+from reportlab.lib.styles import ParagraphStyle
+from reportlab.platypus import Table, TableStyle
+from reportlab.lib.colors import HexColor
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
 from reportlab.lib import colors
@@ -150,6 +153,80 @@ def make_pdf(data: dict, session_id: str) -> str:
         elements.append(img)
         elements.append(Spacer(1, 1 * cm))
 
+
+    # === Итоговый результат оценки рисков ===
+    # Цвета
+    red = HexColor("#e53935")
+    purple = HexColor("#3f51b5")
+    light_red_bg = HexColor("#fceaea")
+
+    # Итоги рисков
+    significant = data["by_risk_type"]["significant"]["count"]
+    high = data["by_risk_type"]["high"]["count"]
+    medium = data["by_risk_type"]["medium"]["count"]
+    low = data["by_risk_type"]["low"]["count"]
+    total_risk = significant + high + medium + low
+
+    elements.append(PageBreak())
+    elements.append(Paragraph("Результат оценки рисков", styles["Heading2"]))
+    elements.append(Spacer(1, 0.3 * cm))
+
+    # Блок предупреждения
+    if significant > 0:
+        warning_style = ParagraphStyle(
+                name="Warning",
+                parent=styles["Normal"],
+                textColor=red,
+                backColor=light_red_bg,
+                borderColor=colors.red,
+                fontSize=16,
+                leading=16,
+                borderWidth=1,
+                borderPadding=6,
+                spaceBefore=6,
+                spaceAfter=6,
+            )
+        elements.append(Paragraph(
+                "<b>Внимание! Договор не может быть заключен, так как отсутствуют существенные условия.</b>",
+                warning_style
+            ))
+
+    # Определение уровня риска
+    if total_risk == 0:
+        title = "Риски не обнаружены"
+        message = "Договор соответствует установленным критериям безопасности. Нарушений и потенциально опасных положений не выявлено."
+    elif high >= 3 or (total_risk > 0 and (high / total_risk) >= 0.4):
+        title = "Высокий уровень рисков"
+        message = "Количество критичных условий превышает допустимый порог. Договор не соответствует требованиям безопасного заключения."
+    elif medium >= 3 or (total_risk > 0 and (medium / total_risk) >= 0.5):
+        title = "Значительные риски"
+        message = "Условия договора содержат отклонения, требующие дополнительной правовой и экономической проверки."
+    elif low == total_risk:
+        title = "Незначительные риски"
+        message = "Обнаруженные риски не превышают минимального порога. Договор может считаться условно допустимым после устранения выявленных технических замечаний."
+    else:
+        title = "Смешанный уровень рисков"
+        message = "Договор содержит условия различной степени риска. Требуется комплексная правовая и финансовая экспертиза."
+
+    # Стиль заголовка и описания
+    summary_style = ParagraphStyle(
+        name="Recommendation",
+        parent=styles["Normal"],
+        backColor=colors.whitesmoke,
+        borderColor=colors.blue,
+        borderWidth=1,
+        borderPadding=6,
+        spaceBefore=6,
+        spaceAfter=6,
+        leading=18
+        )
+
+    # Обертка в таблицу для рамки и фона
+    summary_block = f"<b>{title}</b><br/>{message}"
+    elements.append(Spacer(1, 0.3 * cm))
+    elements.append(Paragraph(summary_block, summary_style))
+
+
     # Рекомендации
     recommendation_style = ParagraphStyle(
     name="Recommendation",
@@ -205,5 +282,4 @@ def make_pdf(data: dict, session_id: str) -> str:
             file_path.unlink()
         except Exception as e:
             print(f"Deleting file {file_path}. An error occurred: {e}")
-    print(pdf_path.as_posix())
     return pdf_path.as_posix()
