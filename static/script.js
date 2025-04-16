@@ -48,7 +48,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // 2. Управление условными вопросами
-    // 2. Управление условными вопросами
     function initConditionalQuestions() {
         document.querySelectorAll('.survey-options input[type="radio"]').forEach(radio => {
             radio.addEventListener('change', function() {

@@ -58,7 +58,6 @@ main {
 
 .content-wrapper {
     width: 80%;
-    /*max-width: 900px;*/
     background: white;
     padding: 40px;
     border-radius: var(--border-radius);
