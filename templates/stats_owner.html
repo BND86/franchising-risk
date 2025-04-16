@@ -146,7 +146,7 @@
                     
                     {% for key, value in stats.by_risk_type.items() %}
                         {% if value.count > 0 %}
-                        <div class="risk-block {% if key == 'significant' %}critical-risk{% endif %}">
+                        <div class="risk-block {% if key == 'significant' %}critical-risk{% endif %} full-width">
                             {% if key == 'significant' %}
                                 <div class="critical-message">
                                     Внимание! Договор не может быть заключен, так как отсутствуют существенные условия.
