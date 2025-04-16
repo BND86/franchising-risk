@@ -354,6 +354,9 @@ td:first-child {
     width: 100%;
     box-sizing: border-box;
 }
+.full-width{
+    width: 100%;
+}
 
 .dashboard-row {
     display: flex;
