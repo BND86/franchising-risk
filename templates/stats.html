@@ -85,47 +85,60 @@
 
                 <!-- Итоговый результат -->
                 <div class="dashboard-row full-width">
-                    <h2>Итоговый результат оценки рисков</h2>
-                    <p>
-                        На основе проведенной оценки рисков, общая степень риска для данного франчайзингового договора составляет: 
-                        
-                    </p>
-                    
-                    {% set total_risk = 0 %}
-{% set significant_risk = 0 %}
-{% set high_risk = 0 %}
-{% set medium_risk = 0 %}
-{% set low_risk = 0 %}
+                    <h2>Результат оценки рисков</h2>
 
-{% for key, value in stats.by_risk_type.items() %}
-    {% if key == 'significant' %}
-        {% set significant_risk = value.count %}
-    {% endif %}
-    
-    {% if key == 'high' %}
-        {% set high_risk = value.count %}
-    {% endif %}
-    
-    {% if key == 'medium' %}
-        {% set medium_risk = value.count %}
-    {% endif %}
-    
-    {% if key == 'low' %}
-        {% set low_risk = value.count %}
-    {% endif %}
-{% endfor %}
+                    {% set risk = namespace(significant=0, high=0, medium=0, low=0) %}
 
-{% set total_risk = significant_risk + high_risk + medium_risk + low_risk %}
+                    {% for key, value in stats.by_risk_type.items() %}
+                        {% if key == 'significant' %}
+                            {% set risk.significant = value.count %}
+                        {% elif key == 'high' %}
+                            {% set risk.high = value.count %}
+                        {% elif key == 'medium' %}
+                            {% set risk.medium = value.count %}
+                        {% elif key == 'low' %}
+                            {% set risk.low = value.count %}
+                        {% endif %}
+                    {% endfor %}
 
-<p>significant_risk: {{ significant_risk }}</p>
-<p>high_risk: {{ high_risk }}</p>
-<p>medium_risk: {{ medium_risk }}</p>
-<p>low_risk: {{ low_risk }}</p>
-<p>Total risk: {{ total_risk }}</p>
+                    {% set total_risk = risk.significant + risk.high + risk.medium + risk.low %}
 
-                    
-                    
-                </div>
+                    <div class="risk-block result-conclusion risk-summary-block">
+                        {% if risk.significant > 0 %}
+                            <div class="risk-detail no-risk">
+                                <div class="critical-message">
+                                    Внимание! Договор не может быть заключен, так как отсутствуют существенные условия.
+                                </div>
+                            </div>
+                            {% endif %}
+                        {% if total_risk == 0 %}
+                            <div class="risk-detail no-risk">
+                                <h4>✅ Риски не обнаружены</h4>
+                                <p>Договор соответствует установленным критериям безопасности. Нарушений и потенциально опасных положений не выявлено.</p>
+                            </div>
+                        {% elif risk.high >= 3 or (total_risk > 0 and (risk.high / total_risk) >= 0.4) %}
+                            <div class="risk-detail high-risk">
+                                <h4>🚨 Высокий уровень рисков</h4>
+                                <p>Количество критичных условий превышает допустимый порог. Договор не соответствует требованиям безопасного заключения.</p>
+                            </div>
+                        {% elif risk.medium >= 3 or (total_risk > 0 and (risk.medium / total_risk) >= 0.5) %}
+                            <div class="risk-detail medium-risk">
+                                <h4>⚠️ Значительные риски</h4>
+                                <p>Условия договора содержат отклонения, требующие дополнительной правовой и экономической проверки.</p>
+                            </div>
+                        {% elif risk.low == total_risk %}
+                            <div class="risk-detail low-risk">
+                                <h4>🟡 Незначительные риски</h4>
+                                <p>Обнаруженные риски не превышают минимального порога. Договор может считаться условно допустимым после устранения выявленных технических замечаний.</p>
+                            </div>
+                        {% else %}
+                            <div class="risk-detail mixed-risk">
+                                <h4>📌 Смешанный уровень рисков</h4>
+                                <p>Договор содержит условия различной степени риска. Требуется комплексная правовая и финансовая экспертиза.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+
 
                 <!-- Описание рисков -->
                 <div class="dashboard-row full-width">

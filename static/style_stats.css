@@ -222,6 +222,25 @@ h3::after {
     background-color: var(--primary-color);
 }
 
+.risk-detail h4 {
+    margin: 1.2rem 0 0.8rem;
+    color: var(--secondary-color);
+    font-size: 1.25rem;
+    font-weight: 500;
+    position: relative;
+    padding-bottom: 6px;
+}
+
+.risk-detail h4::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background-color: var(--primary-color);
+}
+
 table {
     width: 100%;
     border-collapse: separate;
@@ -324,6 +343,16 @@ td:first-child {
 
 .risk-detail {
     margin-bottom: 1.5rem;
+}
+
+.risk-summary-block {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 1rem 1.5rem;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .dashboard-row {
