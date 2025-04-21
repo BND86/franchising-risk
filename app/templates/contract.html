@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/static/favicon.png" type="image/png">
+    <title>Опрос | ПроФраншиза</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header>
+    <botton class="title-box">
+        <a style="text-decoration: none; color: white;" href="/">ПроФраншиза</a>
+    </botton>
+    
+    <nav>
+        <a class="nav-button" href="/">Главная</a>
+        <div class="dropdown-container">
+            <a class="nav-button" href="/user">Пользователь</a>
+            <div class="dropdown-menu">
+                <a href="/contract">Договорный анализ</a>
+                <a href="/economic">Экономический анализ</a>
+            </div>
+        </div>
+        <a class="nav-button" href="/owner">Правообладатель</a>
+        <a class="nav-button" href="/glossary">Глоссарий</a>
+    </nav>
+</header>
+
+<div class="content-wrapper">
+    <h1>Опрос по договорной стороне</h1>
+    <form id="survey-form" action="/submit" method="post">
+        {# Сначала группируем вопросы по категориям #}
+        {% set grouped_questions = {} %}
+        {% for question in questions %}
+            {% if question.categ not in grouped_questions %}
+                {% set _ = grouped_questions.update({question.categ: []}) %}
+            {% endif %}
+            {% set _ = grouped_questions[question.categ].append(question) %}
+        {% endfor %}
+
+        {# Теперь выводим категории и вопросы #}
+        {% for category, questions_in_category in grouped_questions.items() %}
+            <div class="category-group">
+                <div class="category-header">
+                    <h2>{{ category }}</h2>
+                </div>
+                
+                {% for question in questions_in_category %}
+                    <div class="survey-question"
+                         id="question-{{ question.id }}"
+                         data-id="{{ question.id }}"
+                         data-required="{{ 'true' if question.required else 'false' }}"
+                         data-conditional="{{ 'true' if question.is_conditional else 'false' }}"
+                         style="{{ 'display: none;' if question.is_conditional else '' }}">
+                        
+                        <p>{{ question.text }}{% if question.required %} <span class="required-marker">*</span>{% endif %}</p>
+                        <div class="survey-options">
+                            {% for option in question.options %}
+                                <div class="option">
+                                    <input type="radio" 
+                                        id="q{{ question.id }}_{{ option.id }}"
+                                        name="q{{ question.id }}"
+                                        value="{{ option.id }}|{{ option.risk_type }}|{{ option.recomendations }}|{{ option.article }}|{{ option.link }}"
+                                        data-next="{{ option.next_question or '' }}">
+                                    <label for="q{{ question.id }}_{{ option.id }}">
+                                        {{ option.text }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        
+        <div id="error-message" class="error-message" style="display: none;">
+            Пожалуйста, ответьте на все обязательные вопросы (отмечены *).
+        </div>
+        
+        <div class="container">
+            <button type="submit" class="button-style" id="submit-button">Отправить</button>
+        </div>
+        <p style="text-align: center;">*Материал, размещенный на Сайте, носит информационный характер</p>
+    </form>
+</div>
+
+<div class="footer">
+    <div class="footer-box"> 
+        © (www.pf.claba.ru) | Все права защищены, 2025
+    </div>
+</div>
+
+<script src="/static/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/static/favicon.png" type="image/png">
+    <title>Экономический анализ | ПроФраншиза</title>
+    <link rel="stylesheet" href="/static/style_user.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<header>
+    <botton class="title-box">
+        <a style="text-decoration: none; color: white;" href="/">ПроФраншиза</a>
+    </botton>
+    
+    <nav>
+        <a class="nav-button" href="/">Главная</a>
+        <div class="dropdown-container">
+            <a class="nav-button" href="/user">Пользователь</a>
+            <div class="dropdown-menu">
+                <a href="/contract">Договорный анализ</a>
+                <a href="/economic">Экономический анализ</a>
+            </div>
+        </div>
+        <a class="nav-button" href="/owner">Правообладатель</a>
+        <a class="nav-button" href="/glossary">Глоссарий</a>
+    </nav>
+</header>
+
+<main>
+    <section class="content-wrapper">
+        <h1 class="section-title"><i class="fas fa-chart-line"></i> Экономический анализ франшизы</h1>
+        <div class="info-alert">
+            <strong>Важно:</strong> Если у Вас нет представления, о некоторых значениях:
+            <ul class="mt-2 mb-0">
+                <li>Вы можете ввести любые значения для последующего анализа</li>
+                <li>Вы можете оставить форму пустой, тогда инструмент будет использовать средние показатели</li>
+            </ul>
+        </div>
+        
+        <form action="/result" method="post">
+            <div class="form-card">
+                <h2 class="form-section-title"><i class="fas fa-wallet"></i> Финансовые данные</h2>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="start_investment" class="form-label">Стартовые инвестиции, руб.</label>
+                        <input type="number" min="0" class="form-control" id="start_investment" 
+                               name="start_investment" placeholder="500000" >
+                        <div class="form-hint">Включая оборудование, ремонт и т.д.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="franchise_fee" class="form-label">Паушальный взнос, руб.</label>
+                        <input type="number" min="0" class="form-control" id="franchise_fee" 
+                               name="franchise_fee" placeholder="300000" >
+                    </div>
+                    <div class="col-md-6">
+                        <label for="royalty_percent" class="form-label">Роялти, %</label>
+                        <input type="number" min="0" max="20" class="form-control" id="royalty_percent" 
+                               name="royalty_percent" placeholder="5.5" >
+                        <div class="form-hint">От ежемесячного оборота</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="payback_period" class="form-label">Срок окупаемости, мес.</label>
+                        <input type="number" min="6" max="60" class="form-control" id="payback_period" 
+                               name="payback_period" placeholder="24" >
+                    </div>
+                    <div class="col-md-6">
+                        <label for="monthly_turnover" class="form-label">Оборот в месяц, руб.</label>
+                        <input type="number" min="0" class="form-control" id="monthly_turnover" 
+                               name="monthly_turnover" placeholder="1200000" >
+                        <div class="form-hint">Прогнозируемый средний оборот</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-card">
+                <h2 class="form-section-title"><i class="fas fa-info-circle"></i> Инструкция по сбору геоаналитики</h2>
+                <p>Перед тем как заполнить форму, перейдите на сайт <a href="https://yandex.ru/geoanalytics/platform?layer=searches&category=auto&ll=37.595915%2C55.764536&z=13.65" target="_blank">Яндекс Геоаналитика</a></p>
+                <ol>
+                    <li>Выберите категорию бизнеса: рестораны и бары</li>
+                    <li>Оцените по карте:
+                        <ul class="mt-2">
+                            <li><strong>Пешеходный трафик</strong> — число в легенде (например: 45 000 чел./день)</li>
+                            <li><strong>Автомобильный трафик</strong> — аналогично (авто/день)</li>
+                            <li><strong>Количество конкурентов</strong> — по точкам на карте в радиусе 500 м</li>
+                            <li><strong>Поисковые запросы</strong> — слой "Поисковые запросы" в Яндекс</li>
+                        </ul>
+                    </li>
+                    <li>Введите полученные значения в форму ниже</li>
+                </ol>
+            </div>
+            
+            <div class="form-card">
+                <h2 class="form-section-title"><i class="fas fa-map-marked-alt"></i> Геоаналитика</h2>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="pedestrian_traffic" class="form-label">Пешеходный трафик, чел./день</label>
+                        <input type="number" min="0" class="form-control" id="pedestrian_traffic" 
+                               name="pedestrian_traffic" placeholder="45000" >
+                    </div>
+                    <div class="col-md-6">
+                        <label for="car_traffic" class="form-label">Автомобильный трафик, авто/день</label>
+                        <input type="number" min="0" class="form-control" id="car_traffic" 
+                               name="car_traffic" placeholder="15000" >
+                    </div>
+                    <div class="col-md-6">
+                        <label for="competitors_count" class="form-label">Количество конкурентов</label>
+                        <input type="number" min="0" class="form-control" id="competitors_count" 
+                               name="competitors_count" placeholder="8" >
+                    </div>
+                    <div class="col-md-6">
+                        <label for="search_queries" class="form-label">Поисковые запросы, в месяц</label>
+                        <input type="number" min="0" class="form-control" id="search_queries" 
+                               name="search_queries" placeholder="1200" >
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-card">
+                <h2 class="form-section-title"><i class="fas fa-calculator"></i> Дополнительные данные</h2>
+                <div class="info-alert">
+                    <strong>Важно:</strong> Если точные данные неизвестны, используйте рекомендуемые значения:
+                    <ul class="mt-2 mb-0">
+                        <li>Операционные расходы: 40-60% от выручки</li>
+                        <li>Дополнительные платежи: 5-15% от выручки</li>
+                    </ul>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="operational_expenses" class="form-label">Операционные расходы, %</label>
+                        <input type="number" min="0" max="100" class="form-control" id="operational_expenses" 
+                               name="operational_expenses" placeholder="50">
+                        <div class="form-hint">От годовой выручки (аренда, зарплаты, коммунальные)</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="additional_payments" class="form-label">Дополнительные платежи, %</label>
+                        <input type="number" min="0" max="30" class="form-control" id="additional_payments" 
+                               name="additional_payments" placeholder="10">
+                        <div class="form-hint">Налоги, маркетинг, ремонт</div>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-calculator me-2"></i>Рассчитать
+                    </button>
+                </div>
+            </div>
+        </form>
+    </section>
+</main>
+
+<div class="footer">
+    <div class="footer-box"> 
+        © (www.pf.claba.ru) | Все права защищены, 2025
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/static/script.js" defer></script>
+</body>
+</html>

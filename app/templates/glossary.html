@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/static/favicon.png" type="image/png">
+    <title>Глоссарий | ПроФраншиза</title>
+    <link rel="stylesheet" href="/static/style_gloss.css">
+    <style>
+        @media (max-width: 768px) {
+            /* Header styles */
+            header {
+                padding: 10px 5%;
+                flex-direction: column;
+                height: auto;
+                gap: 10px;
+                position: relative; /* Добавляем для z-index */
+                z-index: 1000; /* Поднимаем над контентом */
+                background-color: var(--primary-color); /* Фон должен быть непрозрачным */
+            }
+
+            /* Main content */
+            main {
+                padding-top: 200px; /* Увеличиваем отступ сверху */
+                position: relative;
+                z-index: 1; /* Контент под header */
+            }
+
+            /* Navigation */
+            nav {
+                width: 100%;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+                margin-bottom: 10px; /* Отступ снизу */
+            }
+
+            /* Dropdown styles */
+            .dropdown-container {
+                width: 100%;
+                position: relative;
+            }
+
+            .dropdown-menu {
+                width: calc(100% - 30px); /* Ширина с учетом отступов */
+                margin: 0 auto; /* Центрирование */
+                position: absolute;
+                top: 100%;
+                left: 15px;
+                z-index: 1001;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+
+            /* Остальные стили остаются без изменений */
+            .nav-button {
+                padding: 12px 15px;
+                font-size: 0.9rem;
+                width: 100%;
+                box-sizing: border-box;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <botton class="title-box">
+        <a style="text-decoration: none; color: white;" href="/">ПроФраншиза</a>
+    </botton>
+    
+    <nav>
+        <a class="nav-button" href="/">Главная</a>
+        <div class="dropdown-container">
+            <a class="nav-button" href="/user">Пользователь</a>
+            <div class="dropdown-menu">
+                <a href="/contract">Договорный анализ</a>
+                <a href="/economic">Экономический анализ</a>
+            </div>
+        </div>
+        <a class="nav-button" href="/owner">Правообладатель</a>
+        <a class="nav-button" href="/glossary">Глоссарий</a>
+    </nav>
+</header>
+
+<div class="glossary-container">
+    <div class="glossary-item">
+        <h3 class="glossary-term">Бремя уплаты пошлины</h3>
+        <div class="glossary-definition">
+            Обязанность оплатить государственный сбор или пошлину за определенные услуги (например, за оформление документов).
+        </div>
+    </div>
+
+    <div class="glossary-item">
+        <h3 class="glossary-term">Договор коммерческой концессии</h3>
+        <div class="glossary-definition">
+            Договор, по которому одна компания (правообладатель) разрешает другой компании или ИП (пользователю) работать под своим брендом, использовать технологии и получать поддержку за плату.
+        </div>
+    </div>
+
+    <div class="glossary-item">
+        <h3 class="glossary-term">Паушальный взнос</h3>
+        <div class="glossary-definition">
+            Разовый платеж, который платит пользователь правообладателю за возможность работать под его брендом или использовать его технологии.
+        </div>
+    </div>
+
+    <div class="glossary-item">
+        <h3 class="glossary-term">Периодические платежи</h3>
+        <div class="glossary-definition">
+            Регулярные выплаты (например, ежемесячные) за право пользоваться брендом, технологиями или поддержкой правообладателя.
+        </div>
+    </div>
+
+    <div class="glossary-item">
+        <h3 class="glossary-term">Права и притязания на КИП у третьих лиц</h3>
+        <div class="glossary-definition">
+            Споры о том, что кто-то другой может претендовать на те же товарные знаки или технологии, которые использует правообладатель.
+        </div>
+    </div>
+
+    <div class="glossary-item">
+        <h3 class="glossary-term">Предприятие</h3>
+        <div class="glossary-definition">
+            Бизнес пользователя (например, кафе или магазин), который работает под брендом правообладателя.
+        </div>
+    </div>
+
+    <div class="glossary-item">
+        <h3 class="glossary-term">Прочая документация</h3>
+        <div class="glossary-definition">
+            Дополнительные бумаги, связанные с договором (инструкции, соглашения о конфиденциальности и т. д.).
+        </div>
+    </div>
+
+    <div class="glossary-item">
+        <h3 class="glossary-term">Комплекс исключительных прав (КИП)</h3>
+        <div class="glossary-definition">
+            Набор интеллектуальной собственности правообладателя: бренды, технологии, ноу-хау, которые он передает пользователю.
+        </div>
+    </div>
+
+    <div class="glossary-item">
+        <h3 class="glossary-term">Отступное</h3>
+        <div class="glossary-definition">
+            Способ закрыть долг не деньгами, а чем-то другим (например, передать имущество).
+        </div>
+    </div>
+
+    <div class="glossary-item">
+        <h3 class="glossary-term">Претензионный порядок</h3>
+        <div class="glossary-definition">
+            Попытка решить спор без суда: одна сторона направляет другой письменную претензию с требованием устранить проблему.
+        </div>
+    </div>
+
+    <div class="glossary-item">
+        <h3 class="glossary-term">Секреты производства (Ноу-хау)</h3>
+        <div class="glossary-definition">
+            Ценные знания или технологии компании, которые скрыты от конкурентов (например, рецепт соуса или технология производства).
+        </div>
+    </div>
+
+    <div class="glossary-item">
+        <h3 class="glossary-term">Специальные условия ответственности</h3>
+        <div class="glossary-definition">
+            Особо строгие наказания за нарушение определенных пунктов договора.
+        </div>
+    </div>
+
+    <div class="glossary-item">
+        <h3 class="glossary-term">Субконцессия </h3>
+        <div class="glossary-definition">
+            Когда пользователь, получивший права от правообладателя, передает их дальше третьему лицу (например, открывает франшизу от имени франчайзера).
+        </div>
+    </div>
+
+    <div class="glossary-item">
+        <h3 class="glossary-term">Территория действия права на КИП</h3>
+        <div class="glossary-definition">
+            Географическая зона, где пользователь может легально работать под брендом правообладателя (например, только в Москве).
+        </div>
+    </div>
+
+    <div class="glossary-item">
+        <h3 class="glossary-term">Эксклюзивное право на использование КИП</h3>
+        <div class="glossary-definition">
+            Право быть единственным, кто может использовать бренд или технологию на определенной территории (конкурентов не будет).
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    <div class="footer-box"> 
+        © (www.pf.claba.ru) | Все права защищены, 2025
+    </div>
+</div>
+
+<script src="/static/script.js"></script>
+
+</body>
+</html>

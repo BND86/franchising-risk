@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/static/favicon.png" type="image/png">
+    <title>Статистика рисков | ПроФраншиза</title>
+    <link rel="stylesheet" href="/static/style_stats.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <header>
+        <botton class="title-box">
+            <a style="text-decoration: none; color: white;" href="/">ПроФраншиза</a>
+        </botton>
+
+        <nav>
+            <a class="nav-button" href="/">Главная</a>
+            <div class="dropdown-container">
+                <a class="nav-button" href="/user">Пользователь</a>
+                <div class="dropdown-menu">
+                    <a href="/contract">Договорный анализ</a>
+                    <a href="/economic">Экономический анализ</a>
+                </div>
+            </div>
+            <a class="nav-button" href="/owner">Правообладатель</a>
+            <a class="nav-button" href="/glossary">Глоссарий</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="content-section">
+            <h2>Статистика рисков</h2>
+
+            {% if stats %}
+            <div class="dashboard-grid">
+                <!-- Первая строка: таблица и круговая диаграмма -->
+                <div class="dashboard-row dashboard-row-flex" >
+                    <div class="risk-table-container">
+                        <table>
+                            <thead>
+                              <tr>
+                                <th>Тип риска</th>
+                                <th>Количество</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {% for key, value in stats.by_risk_type.items() %}
+                              <tr>
+                                <td>{{ risk_translations[key] }}</td>
+                                <td>{{ value.count }}</td>
+                              </tr>
+                              {% endfor %}
+                            </tbody>
+                          </table>
+                    </div>
+                    
+                    <div class="chart-box fixed-height">
+                        <h3>Сводная диаграмма рисков</h3>
+                        <div class="chart-container-wrapper">
+                            <canvas id="category-bar-chart"></canvas>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <!-- Вторая строка: диаграммы категорий -->
+                <div class="dashboard-row dashboard-row-flex">
+                    <div class="chart-box fixed-height ">
+                        <h3>Распределение рисков по категориям</h3>
+                        <div class="chart-container-wrapper">
+                            <canvas id="category-pie-chart"></canvas>
+                        </div>
+                    </div>
+
+                    
+                    <div class="chart-box fixed-height" >
+                        <h3>Распределение рисков по типам</h3>
+                        <div class="chart-container-wrapper">
+                            <canvas id="risk-pie-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Итоговый результат -->
+                <div class="dashboard-row full-width" style="max-width: 100%;">
+                    <h2>Результат оценки рисков</h2>
+
+                    {% set risk = namespace(significant=0, high=0, medium=0, low=0) %}
+
+                    {% for key, value in stats.by_risk_type.items() %}
+                        {% if key == 'significant' %}
+                            {% set risk.significant = value.count %}
+                        {% elif key == 'high' %}
+                            {% set risk.high = value.count %}
+                        {% elif key == 'medium' %}
+                            {% set risk.medium = value.count %}
+                        {% elif key == 'low' %}
+                            {% set risk.low = value.count %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% set total_risk = risk.significant + risk.high + risk.medium + risk.low %}
+
+                    <div class="risk-block result-conclusion risk-summary-block">
+                        {% if risk.significant > 0 %}
+                            <div class="risk-detail no-risk">
+                                <div class="critical-message">
+                                    Внимание! Договор не может быть заключен, так как отсутствуют существенные условия.
+                                </div>
+                            </div>
+                            {% endif %}
+                        {% if total_risk == 0 %}
+                            <div class="risk-detail no-risk">
+                                <h4>✅ Риски не обнаружены</h4>
+                                <p>Договор соответствует установленным критериям безопасности. Нарушений и потенциально опасных положений не выявлено.</p>
+                            </div>
+                        {% elif risk.high >= 3 or (total_risk > 0 and (risk.high / total_risk) >= 0.4) %}
+                            <div class="risk-detail high-risk">
+                                <h4>🚨 Высокий уровень рисков</h4>
+                                <p>Количество критичных условий превышает допустимый порог. Договор не соответствует требованиям безопасного заключения.</p>
+                            </div>
+                        {% elif risk.medium >= 3 or (total_risk > 0 and (risk.medium / total_risk) >= 0.5) %}
+                            <div class="risk-detail medium-risk">
+                                <h4>⚠️ Значительные риски</h4>
+                                <p>Условия договора содержат отклонения, требующие дополнительной правовой и экономической проверки.</p>
+                            </div>
+                        {% elif risk.low == total_risk %}
+                            <div class="risk-detail low-risk">
+                                <h4>🟡 Незначительные риски</h4>
+                                <p>Обнаруженные риски не превышают минимального порога. Договор может считаться условно допустимым после устранения выявленных технических замечаний.</p>
+                            </div>
+                        {% else %}
+                            <div class="risk-detail mixed-risk">
+                                <h4>📌 Смешанный уровень рисков</h4>
+                                <p>Договор содержит условия различной степени риска. Требуется комплексная правовая и финансовая экспертиза.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+
+
+                <!-- Описание рисков -->
+                <h2>Описание рисков</h2>
+                <div class="dashboard-row full-width" style="max-width: 100%;">
+                    
+                    {% for key, value in stats.by_risk_type.items() %}
+                        {% if value.count > 0 %}
+                        <div class="risk-block {% if key == 'significant' %}critical-risk{% endif %}" style="max-width: 100%;">
+                            {% if key == 'significant' %}
+                                <div class="critical-message">
+                                    Внимание! Договор не может быть заключен, так как отсутствуют существенные условия.
+                                </div>
+                            {% endif %}
+                            <h3>{{ risk_translations[key] }} ({{ value.count }})</h3>
+                            
+                            {% for detail in value.details %}
+                            {% if key == 'significant' %}
+                            <div class="risk-detail-critical" style="max-width: 100%;">
+                                <p class="question-critical" style="max-width: 100%;">Вопрос: {{ detail.question }}</p>
+                                <p class="answer-critical" style="max-width: 100%;">Ответ: {{ detail.answer }}</p>
+                                {% if detail.recomendations %}
+                                <div class="recommendation-critical" style="max-width: 100%;">
+                                    <p>
+                                        {% for rec in detail.recomendations %}
+                                            {{ rec }}{% if not loop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </p>
+                                    {% if detail.article and detail.article[0] != 'None' and detail.link %}
+                                        <a href="{{ detail.link|replace('[', '',)|replace(']', '')|replace("'", "") }}" target="_blank" rel="noopener noreferrer">
+                                            {{ detail.article[0] }}
+                                        </a>
+                                    {% endif %}
+                                </div>
+                                {% endif %}
+                            </div>    
+                            {% else %}
+                            <div class="risk-detail" style="max-width: 100%;">
+                                <p class="question" style="max-width: 100%;">Вопрос: {{ detail.question }}</p>
+                                <p class="answer" style="max-width: 100%;">Ответ: {{ detail.answer }}</p>
+                                {% if detail.recomendations %}
+                                <div class="recommendation" style="max-width: 100%;">
+                                    <p>
+                                        {% for rec in detail.recomendations %}
+                                            {{ rec }}{% if not loop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </p>
+                                    {% if detail.article and detail.article[0] != 'None' and detail.link %}
+                                        <a href="{{ detail.link|replace('[', '',)|replace(']', '')|replace("'", "") }}" target="_blank" rel="noopener noreferrer">
+                                            {{ detail.article[0] }}
+                                        </a>
+                                    {% endif %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="download-section">
+                <a href="stats/download/?session_id={{ session_id }}" download>
+                    <button class="download-button">СКАЧАТЬ ОТЧЁТ</button>
+                </a>
+            </div>
+            
+            {% elif session_id %}
+            <div class="no-data-box">
+                <p>Нет данных для session_id: <b>{{ session_id }}</b></p>
+            </div>
+            {% else %}
+            <div class="no-data-box">
+                <p>Session ID не был передан.</p>
+            </div>
+            {% endif %}
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-box">
+            © (www.pf.claba.ru) | Все права защищены, 2025
+        </div>
+    </footer>
+
+    <script>
+        // Скрипты для диаграмм остаются без изменений
+        const riskStats = {
+            "significant": {{ stats.by_risk_type['significant'].count }},
+            "high": {{ stats.by_risk_type['high'].count }},
+            "medium": {{ stats.by_risk_type['medium'].count }},
+            "low": {{ stats.by_risk_type['low'].count }}
+        };
+
+        const ctxRisk = document.getElementById('risk-pie-chart').getContext('2d');
+        const riskPieChart = new Chart(ctxRisk, {
+            type: 'pie',
+            data: {
+                labels: ['Существенный риск', 'Высокий риск', 'Средний риск', 'Незначительный риск'],
+                datasets: [{
+                    data: [riskStats.significant, riskStats.high, riskStats.medium, riskStats.low],
+                    backgroundColor: ['#e74c3c', '#e67e22', '#f1c40f', '#2ecc71'],
+                    borderColor: ['#c0392b', '#d35400', '#f39c12', '#27ae60'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.raw || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = Math.round((value / total) * 100);
+                                return `${label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        const categoryLabels = {{ stats.by_category.keys()|list|tojson }};
+        const categoryData = {{ stats.by_category.values()|map(attribute='total')|list|tojson }};
+
+        const ctxCategory = document.getElementById('category-pie-chart').getContext('2d');
+        const categoryPieChart = new Chart(ctxCategory, {
+            type: 'pie',
+            data: {
+                labels: categoryLabels,
+                datasets: [{
+                    data: categoryData,
+                    backgroundColor: [
+                        '#9b59b6',  // фиолетовый  
+                        '#3498db',  // синий  
+                        '#1abc9c',  // бирюзовый  
+                        '#34495e',  // темно-серо-синий  
+                        '#e84393',  // розовый  
+                        '#00b894',  // мятный  
+                        '#6c5ce7',  // лавандовый  
+                        '#fd79a8',  // пастельно-розовый  
+                        '#a29bfe',  // светло-фиолетовый  
+                        '#55efc4'   // аквамарин  
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.raw || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = Math.round((value / total) * 100);
+                                return `${label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        const categoryLabelsBar = {{ stats.by_category.keys()|list|tojson }}.map(label => {
+            return label.length > 15 ? label.substring(0, 15) + '...' : label;
+        });
+        const lowData = {{ stats.by_category.values()|map(attribute='low')|list|tojson }};
+        const mediumData = {{ stats.by_category.values()|map(attribute='medium')|list|tojson }};
+        const highData = {{ stats.by_category.values()|map(attribute='high')|list|tojson }};
+
+        const ctxBar = document.getElementById('category-bar-chart').getContext('2d');
+        const categoryBarChart = new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: categoryLabelsBar,
+                datasets: [
+                    {
+                        label: 'Низкий риск',
+                        data: lowData,
+                        backgroundColor: '#2ecc71',
+                        borderColor: '#27ae60',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Средний риск',
+                        data: mediumData,
+                        backgroundColor: '#f1c40f',
+                        borderColor: '#f39c12',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Высокий риск',
+                        data: highData,
+                        backgroundColor: '#e67e22',
+                        borderColor: '#d35400',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        stacked: false,
+                        title: {
+                            display: true,
+                            text: 'Категории'
+                        },
+                        ticks: {
+                            maxRotation: 30, // Поворот до 90 градусов
+                            minRotation: 15, // Минимальный угол поворота
+                            autoSkip: true,   // Автоматическая пропускность
+                        }
+                    },
+                    y: {
+                        stacked: false,
+                        title: {
+                            display: true,
+                            text: 'Количество рисков'
+                        },
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            // Настроим всплывающее сообщение для категории
+                            title: function(tooltipItem) {
+                                // Покажем полное название категории
+                                const fullLabel = {{ stats.by_category.keys()|list|tojson }};
+                                return fullLabel[tooltipItem[0].dataIndex]; // Полное название по индексу
+                            },
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.raw;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>

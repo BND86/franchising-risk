@@ -1,0 +1,570 @@
+:root {
+    --primary-color: #4361ee;
+    --secondary-color: #3a0ca3;
+    --accent-color: #7209b7;
+    --light-color: #f8f9fa;
+    --dark-color: #212529;
+    --success-color: #4cc9f0;
+    --warning-color: #f72585;
+    --border-radius: 12px;
+    --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f5f7ff;
+    color: var(--dark-color);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 5%;
+    height: 70px;
+    font-size: 1.25rem;
+    font-weight: 600;
+    z-index: 1000;
+    box-shadow: var(--box-shadow);
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+}
+
+main {
+    flex: 1;
+    width: 100%;
+    padding: 100px 5% 50px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.content-wrapper {
+    width: 80%;
+    background: white;
+    padding: 40px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin: 0 auto;
+}
+
+nav {
+    display: flex;
+    gap: 15px;
+}
+
+.nav-button {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--light-color);
+    border: none;
+    color: var(--primary-color);
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    text-decoration: none;
+    display: inline-block;
+}
+
+.nav-button:hover {
+    background-color: var(--accent-color);
+    color: white;
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+.nav-button.active {
+    background-color: var(--secondary-color);
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+}
+
+.title-box {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-size: 1,5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 5px;
+    display: inline-block;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+}
+
+.title-box:hover {
+    background-color: var(--accent-color);
+    color: white;
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+.title-box.active {
+    background-color: var(--secondary-color);
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+}
+
+.dropdown-container {
+    position: relative !important;
+    display: inline-block !important;
+    height: 40px !important;
+}
+
+.dropdown-menu {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    width: 100% !important;
+    background-color: var(--light-color) !important;
+    border-radius: 0 0 10px 10px !important;
+    box-shadow: var(--box-shadow) !important;
+    overflow: hidden !important;
+    display: none !important;
+    z-index: 1001 !important;
+    min-width: 200px !important;
+    transform: translateY(3px) !important;
+    border-radius: 10px !important;
+}
+
+.dropdown-menu a {
+    display: block !important;
+    padding: 10px 20px !important;
+    color: var(--primary-color) !important;
+    text-decoration: none !important;
+    font-size: 0.9rem !important;
+    transition: var(--transition) !important;
+}
+
+.dropdown-menu a:hover {
+    background-color: var(--accent-color) !important;
+    color: white !important;
+    text-decoration: none !important;
+}
+
+.dropdown-container:hover .dropdown-menu {
+    display: block !important;
+}
+
+.dropdown-container:hover .nav-button {
+    background-color: var(--accent-color) !important;
+    color: white !important;
+    transform: translateY(-3px) !important;
+}
+
+.footer {
+    width: 100%;
+    background-color: var(--primary-color);
+    padding: 20px 0;
+    text-align: center;
+    margin-top: 40px;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.footer-box {
+    background-color: var(--light-color);
+    padding: 12px 25px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    display: inline-block;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    font-size: 2rem;
+    color: var(--secondary-color);
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin: 2rem 0 1rem;
+    font-weight: 600;
+}
+
+p {
+    margin-bottom: 1.25rem;
+    text-align: justify;
+    font-size: 1.05rem;
+}
+
+/* Убираем стандартную нумерацию */
+ol {
+    counter-reset: item;
+    list-style-type: none;
+    padding-left: 1.5em;
+}
+
+/* Добавляем свою нумерацию */
+ol > li {
+    counter-increment: item;
+    position: relative;
+    margin-bottom: 0.8rem;
+}
+
+ol > li::before {
+    content: counter(item) ".";
+    position: absolute;
+    left: -1.5em;
+    color: var(--primary); /* Используем ваш основной цвет */
+    font-weight: bold;
+}
+
+/* Убираем нумерацию у вложенных списков */
+ol ul, ol ol {
+    list-style-type: none;
+    padding-left: 1em;
+    margin-top: 0.5rem;
+}
+
+/* Стили для маркеров вложенных списков */
+ol ul li::before {
+    content: "•";
+    color: var(--accent); /* Используем ваш акцентный цвет */
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+}
+
+.mark {
+    font-weight: 600;
+    color: var(--secondary-color);
+}
+
+.underline {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+a:hover {
+    color: var(--accent-color);
+    text-decoration: underline;
+}
+
+blockquote {
+    margin: 1.5rem 0;
+    padding: 1.5rem;
+    background-color: rgba(67, 97, 238, 0.05);
+    border-left: 4px solid var(--primary-color);
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    font-style: italic;
+}
+
+.warning {
+    color: var(--warning-color);
+    font-weight: 600;
+    background-color: rgba(247, 37, 133, 0.1);
+    padding: 10px 15px;
+    border-radius: var(--border-radius);
+    display: inline-block;
+    margin: 10px 0;
+}
+
+.image-placeholder {
+    background-color: #f0f0f0;
+    border: 2px dashed #ccc;
+    padding: 30px;
+    text-align: center;
+    margin: 2rem 0;
+    border-radius: var(--border-radius);
+    color: #666;
+    font-style: italic;
+    transition: var(--transition);
+}
+
+.image-placeholder:hover {
+    border-color: var(--primary-color);
+    background-color: rgba(67, 97, 238, 0.05);
+}
+
+@media (max-width: 768px) {
+    .content-wrapper {
+        padding: 25px;
+        width: 95%;
+    }
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.content-wrapper {
+    margin-bottom: 40px;
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+.content-image {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin: 1.5rem 0;
+    border: 1px solid #eee;
+    transition: transform 0.3s ease;
+}
+
+.content-image:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.analysis-options {
+    padding: 40px 0;
+    background-color: rgba(67, 97, 238, 0.05);
+    border-radius: var(--radius);
+    margin: 40px 0;
+}
+
+.section-title {
+    text-align: center;
+    color: var(--primary-dark);
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+    position: relative;
+    color: var(--secondary-color);
+}
+
+.section-title::after {
+    content: "";
+    display: block;
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(to right, var(--primary), var(--accent));
+    margin: 15px auto 0;
+    border-radius: 2px;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
+    text-decoration: none;
+}
+
+.analysis-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 30px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    display: block;
+    text-decoration: none;
+    color: var(--dark);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(67, 97, 238, 0.1);
+}
+
+.analysis-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(67, 97, 238, 0.15);
+    border-color: rgba(67, 97, 238, 0.3);
+    text-decoration: none;
+}
+
+.card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.card-title {
+    font-size: 1.3rem;
+    color: var(--primary-dark);
+    margin-bottom: 10px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.card-description {
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    text-decoration: none;
+}
+
+.card-arrow {
+    color: var(--primary);
+    font-size: 1.5rem;
+    text-align: right;
+    transition: transform 0.3s ease;
+    text-decoration: none;
+}
+
+.analysis-card:hover .card-arrow {
+    transform: translateX(5px);
+    color: var(--accent);
+    text-decoration: none;
+}
+
+@media (max-width: 768px) {
+    .options-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .analysis-card {
+        padding: 20px;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+    }
+}
+
+/* Дополнительные стили для формы экономического анализа */
+.form-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: var(--box-shadow);
+}
+
+.form-section-title {
+    color: var(--secondary-color);
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 8px;
+}
+
+.form-control {
+    border-radius: 8px;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    transition: var(--transition);
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
+}
+
+.form-hint {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-top: 5px;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border: none;
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: var(--transition);
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+.info-alert {
+    background-color: rgba(67, 97, 238, 0.1);
+    border-left: 4px solid var(--primary-color);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    /* Header styles */
+    header {
+        padding: 10px 5%;
+        flex-direction: column;
+        height: auto;
+        gap: 10px;
+        position: relative; /* Добавляем для z-index */
+        z-index: 1000; /* Поднимаем над контентом */
+        background-color: var(--primary-color); /* Фон должен быть непрозрачным */
+    }
+
+    /* Main content */
+    main {
+        padding-top: 200px; /* Увеличиваем отступ сверху */
+        position: relative;
+        z-index: 1; /* Контент под header */
+    }
+
+    /* Navigation */
+    nav {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        margin-bottom: 10px; /* Отступ снизу */
+    }
+
+    /* Dropdown styles */
+    .dropdown-container {
+        width: 100%;
+        position: relative;
+    }
+
+    .dropdown-menu {
+        width: calc(100% - 30px); /* Ширина с учетом отступов */
+        margin: 0 auto; /* Центрирование */
+        position: absolute;
+        top: 100%;
+        left: 15px;
+        z-index: 1001;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    /* Остальные стили остаются без изменений */
+    .nav-button {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+        width: 100%;
+        box-sizing: border-box;
+        text-align: center;
+    }
+}
